@@ -1,0 +1,42 @@
+body {
+  padding: 100px;
+}
+
+.selected {
+  background-color: crimson;
+}
+
+.hour {
+  width: 100px;
+  height: 150px;
+  background-color: darkorchid;
+}
+
+.timetableContainer {
+  display: flex;
+  flex-direction: row;
+}
+
+.hourLabels {
+  
+}
+
+.hourLabels > p {
+  height: 150px;
+  margin: 0;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.carousel {
+  display: flex;
+  flex-direction: row;
+}
+
+.carousel > div:not(:last-child) {
+  margin-right: 10px;
+}
