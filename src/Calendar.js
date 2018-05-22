@@ -5,7 +5,7 @@ export class Calendar extends Component {
         super(props);
 
         this.state = {
-            selectedDate: new Date()
+            selectedDate: new Date('2018', 3)
         }
 
         this.dayLetters = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
@@ -34,15 +34,19 @@ export class Calendar extends Component {
     }
 
     render() {
-
-        const firstDay = new Date(this.state.selectedDate.getFullYear(), this.state.selectedDate.getMonth()).getDay();
+        //TODO: Add capabality for leap year
+        let firstDay = new Date(this.state.selectedDate.getFullYear(), this.state.selectedDate.getMonth(), 1).getDay();
+        //Date object week starts with sunday as 0. Here reassigning first day to 7 if 0.
+        if (firstDay === 0 ) { firstDay = 7 }
         const month = this.state.selectedDate.getMonth();
+        console.log(firstDay);
+        console.log(month);
+
         const daysArr = Array.apply(null, {length: this.daysInMonth[month] + 1}).map(Number.call, Number);
         daysArr.shift();
 
         if ( firstDay > 1 ) {
             const previousMonth = month === 0 ? 11 : month-1;
-            console.log(previousMonth)
             const previousMonthDays = this.daysInMonth[previousMonth];
             const previousMonthDaysArr = Array.apply(null, {length: previousMonthDays + 1}).map(Number.call, Number);
             previousMonthDaysArr.shift();
@@ -50,14 +54,14 @@ export class Calendar extends Component {
                 daysArr.unshift(previousMonthDaysArr[previousMonthDaysArr.length -1 -i])
             }
         }
+        const daysInWeek = 7;
+        const totalDaysDisplayed = 42;
 
-        const daysLeftInLastWeek = daysArr.length % 7;
-        for (let i = 1; i < daysLeftInLastWeek + 7 ; i++) {
+        const daysLeft = totalDaysDisplayed - daysArr.length;
+        for (let i = 1; i < daysLeft + 1 ; i++) {
             daysArr.push(i);
         }
 
-        const daysInWeek = 7;
-        const totalDaysDisplayed = 42;
         const daysInWeeksArr = []
         for (let i = 0; i < totalDaysDisplayed; i = i + daysInWeek ) {
             daysInWeeksArr.push(daysArr.slice(i, i+daysInWeek));
