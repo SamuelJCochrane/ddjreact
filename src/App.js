@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import './App.css';
 import { Hour } from './Hour.js';
 import { Carousel } from './Carousel.js';
-import { Navbar } from './Navbar.js'
+import { Navbar } from './Navbar.js';
+import { Calendar } from './Calendar.js';
 
 class App extends Component {
 
@@ -16,13 +17,13 @@ class App extends Component {
       },
       selectedEmployee: null,
       employees: [
-        {name: 'John', totalHours: 0, _id: '1'},
-        {name: 'Jack', totalHours: 0, _id: '2'},
-        {name: 'Jacob', totalHours: 0, _id: '3'},
-        {name: 'Jane', totalHours: 0, _id: '4'},
-        {name: 'Jill', totalHours: 0, _id: '5'},
-        {name: 'Janus', totalHours: 0, _id: '6'},
-        {name: 'Jort', totalHours: 0, _id: '7'},
+        {name: 'John', totalHours: 0, hoursWanted: 1, _id: '1'},
+        {name: 'Jack', totalHours: 0, hoursWanted: 50, _id: '2'},
+        {name: 'Jacob', totalHours: 0, hoursWanted: 32, _id: '3'},
+        {name: 'Jane', totalHours: 0, hoursWanted: 45, _id: '4'},
+        {name: 'Jill', totalHours: 0, hoursWanted: 40, _id: '5'},
+        {name: 'Janus', totalHours: 0, hoursWanted: 77, _id: '6'},
+        {name: 'Jort', totalHours: 0, hoursWanted: 35, _id: '7'},
       ],
       timetable: {
         monday: [
@@ -223,14 +224,16 @@ class App extends Component {
 
   removeEmployee(employeeToRemove, day, hourKey) {
     const newEmployees = this.state.timetable[day][Number(hourKey.slice(0, 2))][hourKey].filter(
-      employee => employee._id !== employeeToRemove._id
+      employee => {
+        return employee._id !== employeeToRemove._id
+      }
     );
     const newTimetable = {...this.state.timetable};
     newTimetable[day][Number(hourKey.slice(0, 2))][hourKey] = newEmployees;
     const newEmployeesData = this.state.employees.map(employee => {
-      if (employee._id === employeeToRemove._id && employeeToRemove.totalHours > 0) {
+      if (employee._id === employeeToRemove._id && employee.totalHours > 0) {
         const newEmployee = {...employee};
-        --newEmployee.totalHours
+        newEmployee.totalHours = newEmployee.totalHours - 1
         return newEmployee
       }
       else {return employee}
@@ -336,6 +339,7 @@ class App extends Component {
               }
             </div>
             <Carousel state={this.state} selectEmployee={this.selectEmployee}/>
+            <Calendar/>
           </div>
           <div className="timetableContainer">
             <div className="hourLabels">

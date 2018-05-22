@@ -4,8 +4,9 @@ body {
 
 .appContainer {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   margin-top: 50px;
+  box-sizing: border-box;
 }
 
 .buttonAndCarouselContainer {
@@ -14,6 +15,10 @@ body {
 
 .selected {
   background-color: crimson;
+}
+
+.tooManyHours {
+  color: red;
 }
 
 .day:not(:last-child) {
@@ -46,10 +51,6 @@ ul {
   list-style-type: none;
   padding: 0;
   margin: 0;
-}
-
-li {
-  display: inline
 }
 
 .carousel {
@@ -94,5 +95,34 @@ li {
 .close:focus {
   color: black;
   text-decoration: none;
+  cursor: pointer;
+}
+
+/* CALENDAR */
+.calendarContainer {
+  margin-top: 20px;
+  width: 250px;
+  box-sizing: border-box;
+}
+
+.calendarNavbar {
+  width: 100%;
+  height: 35px;
+  border: 1px solid darkred;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 5px;
+  box-sizing: border-box;
+}
+
+.calendarBlock {
+  width: 100%;
+  height: 200px;
+  border: 1px solid deepskyblue;
+  box-sizing: border-box;
+}
+
+.calendarArrows:hover {
   cursor: pointer;
 }
