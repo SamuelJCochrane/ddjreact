@@ -121,8 +121,39 @@ ul {
   height: 200px;
   border: 1px solid deepskyblue;
   box-sizing: border-box;
+  padding: 20px;
+}
+
+.calendarArrows {
+  user-select: none;
 }
 
 .calendarArrows:hover {
   cursor: pointer;
+}
+
+.dayLetters {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 10px;
+}
+
+.dayLetters > div {
+  width: 30px; 
+  text-align: center;
+}
+
+.weekRow {
+  display: flex;
+  flex-direction: row;
+}
+
+.weekRow:hover {
+  background-color: darkcyan;
+  cursor: pointer;
+}
+
+.dayInRow { 
+  width: 30px;
+  text-align: center;
 }
