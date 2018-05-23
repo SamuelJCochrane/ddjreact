@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
+import FontAwesome from 'react-fontawesome';
 import './App.css';
 import { Hour } from './Hour.js';
 import { Carousel } from './Carousel.js';
 import { Navbar } from './Navbar.js';
 import { Calendar } from './Calendar.js';
+import { NewEmployeeForm } from './NewEmployeeForm.js';
 
 class App extends Component {
 
@@ -11,10 +13,13 @@ class App extends Component {
     super(props)
 
     this.state = {
-      newEmployeeModal: false,
-      newEmployeeModalData: {
-        name: ''
-      },
+      selectedDate: new Date(),
+      newEmployeeForm: false,
+      newEmployeeName: '',
+      newEmployeeHours: 0,
+      startHour: '06:00',
+      endHour: '23:00',
+      wrongTimeSelection: false,
       selectedEmployee: null,
       employees: [
         {name: 'John', totalHours: 0, hoursWanted: 1, _id: '1'},
@@ -216,10 +221,13 @@ class App extends Component {
     this.addEmployee = this.addEmployee.bind(this);
     this.clearTimetable = this.clearTimetable.bind(this);
     this.clearEmployee = this.clearEmployee.bind(this);
-    this.displayAddEmployeeModal = this.displayAddEmployeeModal.bind(this);
-    this.removeAddEmployeeModal = this.removeAddEmployeeModal.bind(this);
+    this.toggleNewEmployeeForm = this.toggleNewEmployeeForm.bind(this);
     this.onNewEmployeeNameChange = this.onNewEmployeeNameChange.bind(this);
+    this.onNewEmployeeHoursChange = this.onNewEmployeeHoursChange.bind(this);
     this.submitNewEmployee = this.submitNewEmployee.bind(this);
+    this.onStartHourChange = this.onStartHourChange.bind(this);
+    this.onEndHourChange = this.onEndHourChange.bind(this);
+    this.onSubmitNewHours = this.onSubmitNewHours.bind(this);
   }
 
   removeEmployee(employeeToRemove, day, hourKey) {
@@ -308,20 +316,43 @@ class App extends Component {
     this.setState({ employees: newEmployeesData })
   }
 
-  displayAddEmployeeModal() {
-    this.setState({newEmployeeModal: true})
-  }
-
-  removeAddEmployeeModal() {
-    this.setState({newEmployeeModal: false})
+  toggleNewEmployeeForm() {
+    this.setState({ newEmployeeForm: !this.state.newEmployeeForm })
   }
 
   onNewEmployeeNameChange(event) {
-    this.setState({ newEmployeeModalData: {name: event.target.value } })
+    this.setState({ newEmployeeName: event.target.value })
+  }
+
+  onNewEmployeeHoursChange(event) {
+    this.setState({ newEmployeeHours: event.target.value })
   }
 
   submitNewEmployee(event) {
     event.preventDefault();
+  }
+
+  onStartHourChange(event) {
+    if (Number(event.target.value.slice(0,2)) < Number(this.state.endHour.slice(0,2))) {
+      this.setState({ startHour: event.target.value, wrongTimeSelection: false })
+    } 
+    else {
+      this.setState({ startHour: event.target.value, wrongTimeSelection: true })
+    }
+  }
+
+  onEndHourChange(event) {
+    if (Number(this.state.startHour.slice(0,2)) < Number(event.target.value.slice(0,2))) {
+      this.setState({ endHour: event.target.value, wrongTimeSelection: false })
+    }
+    else {
+      this.setState({ endHour: event.target.value, wrongTimeSelection: true })
+    }
+  }
+
+  onSubmitNewHours(event) {
+    console.log(this.state.startHour)
+    console.log(this.state.endHour)
   }
 
   render() {
@@ -329,17 +360,62 @@ class App extends Component {
       <div className="App">
         <Navbar/>
         <div className="appContainer">
-          <div className="buttonAndCarouselContainer">
+          <div className="buttonAndCarouselContainer">      
+            <Carousel state={this.state} selectEmployee={this.selectEmployee}/>
             <div className="buttonArray">
-              <button onClick={this.displayAddEmployeeModal}>Add Employee</button>
+              <button onClick={this.toggleNewEmployeeForm}>Add Employee</button>
               <button onClick={this.clearTimetable}>Clear All</button>
               {
                 this.state.selectedEmployee && 
                 <button onClick={this.clearEmployee}>Clear {this.state.selectedEmployee.name}</button>
               }
             </div>
-            <Carousel state={this.state} selectEmployee={this.selectEmployee}/>
-            <Calendar/>
+            {
+              this.state.newEmployeeForm &&
+              <NewEmployeeForm
+                state={this.state}
+                toggleNewEmployeeForm={this.toggleNewEmployeeForm}
+                submitNewEmployee={this.submitNewEmployee}
+                onNewEmployeeNameChange={this.onNewEmployeeNameChange}
+                onNewEmployeeHoursChange={this.onNewEmployeeHoursChange}/>
+            }
+            <Calendar state={this.state}/>
+            <div className="timesSelection">
+              <span>Start:</span>
+              <select value={this.state.startHour} onChange={this.onStartHourChange}>
+                {
+                  this.state.timetable.monday.map(hour => 
+                    <option key={Object.keys(hour)[0]} value={Object.keys(hour)[0]}>{Object.keys(hour)[0]}</option>  
+                  )
+                }
+              </select>
+              <span>End:</span>
+              <select value={this.state.endHour} onChange={this.onEndHourChange}>
+                {
+                  this.state.timetable.monday.map(hour => 
+                    <option key={Object.keys(hour)[0]} value={Object.keys(hour)[0]}>{Object.keys(hour)[0]}</option>  
+                  )
+                }
+              </select>
+              <button onClick={this.onSubmitNewHours}>Submit</button>
+            </div>
+            {
+              this.state.wrongTimeSelection &&
+              <span>Confucius said, 'Things must begin before they end'</span>
+            }
+          </div>
+          <div className="weekTitle">
+            <h2>WEEK</h2>
+            <h2>MONTH YEAR</h2>
+          </div>
+          <div className="dayLabels">
+              <div>Monday</div>
+              <div>Tuesday</div>
+              <div>Wednesday</div>
+              <div>Thursday</div>
+              <div>Friday</div>
+              <div>Saturday</div>
+              <div>Sunday</div>
           </div>
           <div className="timetableContainer">
             <div className="hourLabels">
@@ -419,19 +495,6 @@ class App extends Component {
             </div>
           </div>
           </div>
-            { 
-              this.state.newEmployeeModal &&
-              <div className="modal">
-                <div className="modal-content">
-                  <span className="close" onClick={this.removeAddEmployeeModal}>&times;</span>
-                  <form>
-                    Name:
-                    <input type="text" name="name" onChange={this.onNewEmployeeNameChange}/>
-                    <input type="submit" value="Submit" onClick={this.submitNewEmployee}/>
-                  </form>
-                </div>
-              </div>
-            }
         </div>
     );
   }

@@ -9,12 +9,17 @@ body {
   box-sizing: border-box;
 }
 
+.weekTitle {
+  margin-left: 600px;
+}
+
 .buttonAndCarouselContainer {
   position: fixed;
+  margin-top: 40px;
 }
 
 .selected {
-  background-color: crimson;
+  background-color: rgba(0, 255, 0, 0.555);
 }
 
 .tooManyHours {
@@ -26,16 +31,51 @@ body {
 }
 
 .hour {
+  position: relative;
   width: 100px;
   height: 150px;
   margin-bottom: 10px;
-  background-color: darkorchid;
+  border: 1px solid darkorchid;
+  box-sizing: border-box;
+  padding: 10px;
+  padding-top: 25px;
+}
+
+.hour > button {
+  background-color: white;
+  position: absolute;
+  top: 2px;
+  left: 26px;
+  border-radius: 10px;
+}
+
+.hour > button:hover {
+  cursor: pointer;
+}
+
+.hour li:hover {
+  background-color: red;
+  cursor: pointer;
 }
 
 .timetableContainer {
   display: flex;
   flex-direction: row;
   margin-left: 350px;
+}
+
+.dayLabels {
+  margin-left: 410px;
+  display: flex;
+  flex-direction: row;
+}
+
+.dayLabels > div {
+  width: 100px;
+  text-align: center;
+}
+.dayLabels > div:not(:first-child) {
+  padding-left: 10px;
 }
 
 .hourLabels {
@@ -56,47 +96,13 @@ ul {
 .carousel {
   display: flex;
   flex-direction: row;
+  margin-bottom: 10px;
 }
 
 .carousel > div:not(:last-child) {
   margin-right: 10px;
 }
 
-/* MODAL */
-.modal {
-  position: fixed;
-  z-index: 1; 
-  left: 0;
-  top: 0;
-  width: 100%; 
-  height: 100%; 
-  overflow: auto;
-  background-color: rgb(0,0,0); 
-  background-color: rgba(0,0,0,0.4); 
-}
-
-.modal-content {
-  background-color: #fefefe;
-  margin: 15% auto; 
-  padding: 20px;
-  border: 1px solid #888;
-  width: 200px; 
-  border-radius: 5px;
-}
-
-.close {
-  color: #aaa;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-  color: black;
-  text-decoration: none;
-  cursor: pointer;
-}
 
 /* CALENDAR */
 .calendarContainer {
@@ -126,10 +132,25 @@ ul {
 
 .calendarArrows {
   user-select: none;
+  font-size: 1.4rem;
 }
 
 .calendarArrows:hover {
   cursor: pointer;
+}
+
+.calendarArrows span {
+  width: 20px;
+  text-align: center;
+  border-radius: 100px;
+}
+
+.calendarArrows span:hover {
+  color: rgba(0, 183, 255, 0.39);
+}
+
+.calendarArrows span:not(:last-child) {
+  margin-right: 5px;
 }
 
 .dayLetters {
@@ -156,4 +177,56 @@ ul {
 .dayInRow { 
   width: 30px;
   text-align: center;
+}
+
+/* NEW EMPLOYEE FORM */
+
+.newEmployeeForm {
+  border: 1px solid darkcyan;
+  margin-top: 5px;
+  width: 250px;
+  box-sizing: border-box;
+  padding: 0px 10px 10px 10px;
+}
+
+.newEmployeeForm p {
+  margin: 0;
+}
+
+.newEmployeeForm .titleBar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.newEmployeeForm > form > .titleBar > p {
+  margin-top: 10px;
+}
+
+.newEmployeeForm > form {
+  display: flex;
+  flex-direction: column;
+}
+
+.closeBtn {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  padding: 0;
+}
+
+.closeBtn:hover {
+  cursor: pointer;
+  color: #7a7a7a;
+}
+
+/* TIME SELECTION */
+
+.timesSelection {
+  margin-top: 10px;
+}
+
+.timesSelection > *:not(:last-child) {
+  margin-right: 3px;
 }

@@ -1,20 +1,24 @@
 import React, { Component } from 'react';
+import FontAwesome from 'react-fontawesome';
 
 export class Calendar extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            selectedDate: new Date('2018', 3)
-        }
+        this.state = props.state;
 
         this.dayLetters = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
         this.monthLabels = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
         this.daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
         this.toggleCalendar = this.toggleCalendar.bind(this);
+        this.homeMonth = this.homeMonth.bind(this);
         this.calendarRight = this.calendarRight.bind(this);
         this.calendarLeft = this.calendarLeft.bind(this);
+    }
+
+    homeMonth() {
+        this.setState({ selectedDate: new Date() })
     }
 
     calendarRight() {
@@ -39,8 +43,6 @@ export class Calendar extends Component {
         //Date object week starts with sunday as 0. Here reassigning first day to 7 if 0.
         if (firstDay === 0 ) { firstDay = 7 }
         const month = this.state.selectedDate.getMonth();
-        console.log(firstDay);
-        console.log(month);
 
         const daysArr = Array.apply(null, {length: this.daysInMonth[month] + 1}).map(Number.call, Number);
         daysArr.shift();
@@ -67,15 +69,14 @@ export class Calendar extends Component {
             daysInWeeksArr.push(daysArr.slice(i, i+daysInWeek));
         }
 
-        console.log(daysInWeeksArr);
-
-
         return (
             <div className="calendarContainer">
                 <div className="calendarNavbar">
                     <div>{this.monthLabels[this.state.selectedDate.getMonth()]} {this.state.selectedDate.getFullYear()}</div>
                     <div className="calendarArrows">
-                        <span onClick={this.calendarLeft}>&lt;</span> <span onClick={this.calendarRight}>&gt;</span>
+                        <span onClick={this.homeMonth}><FontAwesome name='home'/></span> 
+                        <span onClick={this.calendarLeft}><FontAwesome name='angle-left'/></span> 
+                        <span onClick={this.calendarRight}><FontAwesome name='angle-right'/></span>
                     </div>
                 </div>
                 <div className="calendarBlock">
