@@ -7,11 +7,13 @@ export class Calendar extends Component {
 
         this.state = props.state;
         this.generateMonth = props.generateMonth;
+        this.generateWeekID = props.generateWeekID;
         
         this.toggleCalendar = this.toggleCalendar.bind(this);
         this.homeMonth = this.homeMonth.bind(this);
         this.calendarRight = this.calendarRight.bind(this);
         this.calendarLeft = this.calendarLeft.bind(this);
+        this.setSelectedWeek = this.setSelectedWeek.bind(this);
     }
 
     homeMonth() {
@@ -32,6 +34,10 @@ export class Calendar extends Component {
 
     toggleCalendar() {
         this.setState({ calendarDisplayed: !this.state.calendarDisplayed })
+    }
+
+    setSelectedWeek(weekID) {
+        this.setState({ selectedWeek: weekID })
     }
 
     render() {
@@ -60,8 +66,12 @@ export class Calendar extends Component {
                         {
                             daysInWeeksArr.map((week, index) => 
                                 {
+                                    let weekID = this.generateWeekID(this.state.selectedDate.getFullYear(), this.state.selectedDate.getMonth(), week, index);
                                     return (
-                                        <div key={index} className="weekRow">
+                                        <div    key={index} 
+                                                className={`weekRow ${weekID === this.state.selectedWeek ? "selectedWeek" : ''}`} 
+                                                id={weekID}
+                                                onClick={() => this.setSelectedWeek(weekID)}>
                                             {week.map((date, index) => 
                                                 <div key={index} className="dayInRow">{date}</div>
                                             )}

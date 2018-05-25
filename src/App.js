@@ -18,6 +18,7 @@ class App extends Component {
 
     this.state = {
       selectedDate: new Date(),
+      selectedWeek: null,
       newEmployeeForm: false,
       newEmployeeName: '',
       newEmployeeHours: 0,
@@ -42,6 +43,7 @@ class App extends Component {
       dayLetters: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
       monthLabels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
       daysInMonth: [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
+    
     }
 
     this.removeEmployee = this.removeEmployee.bind(this);
@@ -57,6 +59,7 @@ class App extends Component {
     this.onEndHourChange = this.onEndHourChange.bind(this);
     this.onSubmitNewHours = this.onSubmitNewHours.bind(this);
     this.clearHiddenHours = this.clearHiddenHours.bind(this);
+    this.generateWeekID = this.generateWeekID.bind(this);
   }
 
   componentDidMount() {
@@ -260,12 +263,14 @@ class App extends Component {
         const previousMonthDays = this.state.daysInMonth[previousMonth];
         const previousMonthDaysArr = Array.apply(null, {length: previousMonthDays + 1}).map(Number.call, Number);
         previousMonthDaysArr.shift();
-        for (let i = 0; i < firstDay - 1; i++) {
-            daysArr.unshift(previousMonthDaysArr[previousMonthDaysArr.length -1 -i])
+        for (let i = 1; i < firstDay; i++) {
+            daysArr.unshift(previousMonthDaysArr[previousMonthDaysArr.length -i])
         }
     }
     const daysInWeek = 7;
-    const totalDaysDisplayed = 42;
+    let totalDaysDisplayed;
+    
+    daysArr.length > 35 ? totalDaysDisplayed = 42 : totalDaysDisplayed = 35;
 
     const daysLeft = totalDaysDisplayed - daysArr.length;
     for (let i = 1; i < daysLeft + 1 ; i++) {
@@ -279,6 +284,37 @@ class App extends Component {
 
     return daysInWeeksArr
   }
+
+  generateWeekID(year, month, weekArr, weekIndex) {
+    let weekID = `${year}`
+    if (weekIndex === 0) {
+        // If monday of first week is in previous month
+        if (weekArr[0] > 20) {
+            let newMonth = month > 0 ? month - 1 : 11;
+            weekID = `${weekID}-${newMonth}-${month}-${weekArr[0]}-${weekArr[6]}}`;
+            return weekID
+        }
+        else {
+            weekID = `${weekID}-${month}-${month}-${weekArr[0]}-${weekArr[6]}}`;
+            return weekID;
+        }
+    }
+    else if (weekIndex === 4 || weekIndex === 5) {
+        if (weekArr[6] < 20) {
+            let newMonth = month < 11 ? month + 1 : 0;
+            weekID = `${weekID}-${month}-${newMonth}-${weekArr[0]}-${weekArr[6]}}`;
+            return weekID;
+        }
+        else {
+            weekID = `${weekID}-${month}-${month}-${weekArr[0]}-${weekArr[6]}}`;
+            return weekID; 
+        }
+    }
+    else {
+        weekID = `${weekID}-${month}-${month}-${weekArr[0]}-${weekArr[6]}}`;
+        return weekID;
+    }
+}
 
   render() {
     return (
@@ -307,7 +343,7 @@ class App extends Component {
                   onNewEmployeeNameChange={this.onNewEmployeeNameChange}
                   onNewEmployeeHoursChange={this.onNewEmployeeHoursChange}/>
               }
-              <Calendar state={this.state} generateMonth={this.generateMonth}/>
+              <Calendar state={this.state} generateMonth={this.generateMonth} generateWeekID={this.generateWeekID}/>
               <div className="timesSelection">
                 <span>Start:</span>
                 <select value={this.state.tempStartHour} onChange={this.onStartHourChange}>
