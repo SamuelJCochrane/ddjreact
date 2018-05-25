@@ -1,11 +1,15 @@
 import React, { Component } from 'react';
 import FontAwesome from 'react-fontawesome';
 import './App.css';
+
+//COMPONENTS
 import { Hour } from './Hour.js';
 import { Carousel } from './Carousel.js';
 import { Navbar } from './Navbar.js';
 import { Calendar } from './Calendar.js';
 import { NewEmployeeForm } from './NewEmployeeForm.js';
+
+import { tempTimetable } from './tempTimetable.js';
 
 class App extends Component {
 
@@ -17,8 +21,10 @@ class App extends Component {
       newEmployeeForm: false,
       newEmployeeName: '',
       newEmployeeHours: 0,
-      startHour: '06:00',
+      startHour: '00:00',
       endHour: '23:00',
+      tempStartHour: '00:00',
+      tempEndHour: '23:00',
       wrongTimeSelection: false,
       selectedEmployee: null,
       employees: [
@@ -30,190 +36,12 @@ class App extends Component {
         {name: 'Janus', totalHours: 0, hoursWanted: 77, _id: '6'},
         {name: 'Jort', totalHours: 0, hoursWanted: 35, _id: '7'},
       ],
-      timetable: {
-        monday: [
-          {'00:00': []},
-          {'01:00': []},
-          {'02:00': []},
-          {'03:00': []},
-          {'04:00': []},
-          {'05:00': []},
-          {'06:00': []},
-          {'07:00': []},
-          {'08:00': []},
-          {'09:00': []},
-          {'10:00': []},
-          {'11:00': []},
-          {'12:00': []},
-          {'13:00': []},
-          {'14:00': []},
-          {'15:00': []},
-          {'16:00': []},
-          {'17:00': []},
-          {'18:00': []},
-          {'19:00': []},
-          {'20:00': []},
-          {'21:00': []},
-          {'22:00': []},
-          {'23:00': []},
-        ],
-        tuesday: [
-          {'00:00': []},
-          {'01:00': []},
-          {'02:00': []},
-          {'03:00': []},
-          {'04:00': []},
-          {'05:00': []},
-          {'06:00': []},
-          {'07:00': []},
-          {'08:00': []},
-          {'09:00': []},
-          {'10:00': []},
-          {'11:00': []},
-          {'12:00': []},
-          {'13:00': []},
-          {'14:00': []},
-          {'15:00': []},
-          {'16:00': []},
-          {'17:00': []},
-          {'18:00': []},
-          {'19:00': []},
-          {'20:00': []},
-          {'21:00': []},
-          {'22:00': []},
-          {'23:00': []},
-        ],
-        wednesday: [
-          {'00:00': []},
-          {'01:00': []},
-          {'02:00': []},
-          {'03:00': []},
-          {'04:00': []},
-          {'05:00': []},
-          {'06:00': []},
-          {'07:00': []},
-          {'08:00': []},
-          {'09:00': []},
-          {'10:00': []},
-          {'11:00': []},
-          {'12:00': []},
-          {'13:00': []},
-          {'14:00': []},
-          {'15:00': []},
-          {'16:00': []},
-          {'17:00': []},
-          {'18:00': []},
-          {'19:00': []},
-          {'20:00': []},
-          {'21:00': []},
-          {'22:00': []},
-          {'23:00': []},
-        ],
-        thursday: [
-          {'00:00': []},
-          {'01:00': []},
-          {'02:00': []},
-          {'03:00': []},
-          {'04:00': []},
-          {'05:00': []},
-          {'06:00': []},
-          {'07:00': []},
-          {'08:00': []},
-          {'09:00': []},
-          {'10:00': []},
-          {'11:00': []},
-          {'12:00': []},
-          {'13:00': []},
-          {'14:00': []},
-          {'15:00': []},
-          {'16:00': []},
-          {'17:00': []},
-          {'18:00': []},
-          {'19:00': []},
-          {'20:00': []},
-          {'21:00': []},
-          {'22:00': []},
-          {'23:00': []},
-        ],
-        friday: [
-          {'00:00': []},
-          {'01:00': []},
-          {'02:00': []},
-          {'03:00': []},
-          {'04:00': []},
-          {'05:00': []},
-          {'06:00': []},
-          {'07:00': []},
-          {'08:00': []},
-          {'09:00': []},
-          {'10:00': []},
-          {'11:00': []},
-          {'12:00': []},
-          {'13:00': []},
-          {'14:00': []},
-          {'15:00': []},
-          {'16:00': []},
-          {'17:00': []},
-          {'18:00': []},
-          {'19:00': []},
-          {'20:00': []},
-          {'21:00': []},
-          {'22:00': []},
-          {'23:00': []},
-        ],
-        saturday: [
-          {'00:00': []},
-          {'01:00': []},
-          {'02:00': []},
-          {'03:00': []},
-          {'04:00': []},
-          {'05:00': []},
-          {'06:00': []},
-          {'07:00': []},
-          {'08:00': []},
-          {'09:00': []},
-          {'10:00': []},
-          {'11:00': []},
-          {'12:00': []},
-          {'13:00': []},
-          {'14:00': []},
-          {'15:00': []},
-          {'16:00': []},
-          {'17:00': []},
-          {'18:00': []},
-          {'19:00': []},
-          {'20:00': []},
-          {'21:00': []},
-          {'22:00': []},
-          {'23:00': []},
-        ],
-        sunday: [
-          {'00:00': []},
-          {'01:00': []},
-          {'02:00': []},
-          {'03:00': []},
-          {'04:00': []},
-          {'05:00': []},
-          {'06:00': []},
-          {'07:00': []},
-          {'08:00': []},
-          {'09:00': []},
-          {'10:00': []},
-          {'11:00': []},
-          {'12:00': []},
-          {'13:00': []},
-          {'14:00': []},
-          {'15:00': []},
-          {'16:00': []},
-          {'17:00': []},
-          {'18:00': []},
-          {'19:00': []},
-          {'20:00': []},
-          {'21:00': []},
-          {'22:00': []},
-          {'23:00': []},
-        ],
-      }
+      timetable: tempTimetable,
+      daysOfTheWeek: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'],
+      hours: ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00' ],
+      dayLetters: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
+      monthLabels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+      daysInMonth: [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
     }
 
     this.removeEmployee = this.removeEmployee.bind(this);
@@ -228,6 +56,11 @@ class App extends Component {
     this.onStartHourChange = this.onStartHourChange.bind(this);
     this.onEndHourChange = this.onEndHourChange.bind(this);
     this.onSubmitNewHours = this.onSubmitNewHours.bind(this);
+    this.clearHiddenHours = this.clearHiddenHours.bind(this);
+  }
+
+  componentDidMount() {
+    this.setState({ timetable: tempTimetable})
   }
 
   removeEmployee(employeeToRemove, day, hourKey) {
@@ -334,167 +167,222 @@ class App extends Component {
 
   onStartHourChange(event) {
     if (Number(event.target.value.slice(0,2)) < Number(this.state.endHour.slice(0,2))) {
-      this.setState({ startHour: event.target.value, wrongTimeSelection: false })
+      this.setState({ tempStartHour: event.target.value, wrongTimeSelection: false })
     } 
     else {
-      this.setState({ startHour: event.target.value, wrongTimeSelection: true })
+      this.setState({ wrongTimeSelection: true })
     }
   }
 
   onEndHourChange(event) {
     if (Number(this.state.startHour.slice(0,2)) < Number(event.target.value.slice(0,2))) {
-      this.setState({ endHour: event.target.value, wrongTimeSelection: false })
+      this.setState({ tempEndHour: event.target.value, wrongTimeSelection: false })
     }
     else {
-      this.setState({ endHour: event.target.value, wrongTimeSelection: true })
+      this.setState({ wrongTimeSelection: true })
     }
   }
 
   onSubmitNewHours(event) {
-    console.log(this.state.startHour)
-    console.log(this.state.endHour)
+    if (Number(this.state.tempStartHour.slice(0,2)) < Number(this.state.tempEndHour.slice(0,2))) {
+      this.setState({ startHour: this.state.tempStartHour, endHour: this.state.tempEndHour }, this.clearHiddenHours)
+    }
+  }
+
+  clearHiddenHours() {
+    const newTimetable = {'monday': [], 'tuesday': [], 'wednesday': [], 'thursday': [], 'friday': [], 'saturday': [], 'sunday': [], }
+    this.state.daysOfTheWeek
+      .forEach(day => 
+        newTimetable[day] =
+        this.state.timetable[day]
+          .map(hourObj => {
+            const hourKey = Object.keys(hourObj)[0];
+            if (hourKey.slice(0,2) < this.state.startHour.slice(0,2) || hourKey.slice(0,2) > this.state.endHour.slice(0,2)) {
+              const tempObj = {}
+              tempObj[hourKey] = []
+              return tempObj
+            } 
+            else {
+              return hourObj
+            }
+          }
+          )
+      )
+
+    let employeesToDecreaseIDs = {}
+    for (let day in this.state.timetable) {
+      this.state.timetable[day].forEach(hour => {
+        if (
+          hour[Object.keys(hour)[0]].length > 0 &&
+          (Object.keys(hour)[0].slice(0,2) < this.state.startHour.slice(0,2) ||
+          Object.keys(hour)[0].slice(0,2) > this.state.endHour.slice(0,2))
+        ) 
+        {
+          hour[Object.keys(hour)[0]].forEach(employee => {
+            if (employeesToDecreaseIDs[employee._id]) {
+              ++employeesToDecreaseIDs[employee._id];
+            }
+            else {
+              employeesToDecreaseIDs[employee._id] = 1;
+            }
+          }) 
+        }
+      }
+      )
+    }
+
+    const newEmployees = this.state.employees.map(employee => {
+      for (let employeeToDecreaseID in employeesToDecreaseIDs) {
+        if (employeeToDecreaseID === employee._id) {
+          const newEmployee = {...employee};
+          newEmployee.totalHours -= employeesToDecreaseIDs[employee._id];
+          return newEmployee;
+        }
+      }
+      return employee;
+    })
+
+    this.setState({ timetable: newTimetable, employees: newEmployees })
+  }
+
+  generateMonth() {
+    //TODO: Add capabality for leap year
+    let firstDay = new Date(this.state.selectedDate.getFullYear(), this.state.selectedDate.getMonth(), 1).getDay();
+    //Date object week starts with sunday as 0. Here reassigning first day to 7 if 0.
+    if (firstDay === 0 ) { firstDay = 7 }
+    const month = this.state.selectedDate.getMonth();
+    //Creates an array of numbers from 0 to 
+    const daysArr = Array.apply(null, {length: this.state.daysInMonth[month] + 1}).map(Number.call, Number);
+    daysArr.shift();
+
+    if ( firstDay > 1 ) {
+        const previousMonth = month === 0 ? 11 : month-1;
+        const previousMonthDays = this.state.daysInMonth[previousMonth];
+        const previousMonthDaysArr = Array.apply(null, {length: previousMonthDays + 1}).map(Number.call, Number);
+        previousMonthDaysArr.shift();
+        for (let i = 0; i < firstDay - 1; i++) {
+            daysArr.unshift(previousMonthDaysArr[previousMonthDaysArr.length -1 -i])
+        }
+    }
+    const daysInWeek = 7;
+    const totalDaysDisplayed = 42;
+
+    const daysLeft = totalDaysDisplayed - daysArr.length;
+    for (let i = 1; i < daysLeft + 1 ; i++) {
+        daysArr.push(i);
+    }
+
+    const daysInWeeksArr = []
+    for (let i = 0; i < totalDaysDisplayed; i = i + daysInWeek ) {
+        daysInWeeksArr.push(daysArr.slice(i, i+daysInWeek));
+    }
+
+    return daysInWeeksArr
   }
 
   render() {
     return (
       <div className="App">
-        <Navbar/>
-        <div className="appContainer">
-          <div className="buttonAndCarouselContainer">      
-            <Carousel state={this.state} selectEmployee={this.selectEmployee}/>
-            <div className="buttonArray">
-              <button onClick={this.toggleNewEmployeeForm}>Add Employee</button>
-              <button onClick={this.clearTimetable}>Clear All</button>
+      
+        {this.state.timetable && 
+        <div>
+          <Navbar/>
+          <div className="appContainer">
+            <div className="buttonAndCarouselContainer">      
+              <Carousel state={this.state} selectEmployee={this.selectEmployee}/>
+              <div className="buttonArray">
+                <button onClick={this.toggleNewEmployeeForm}>Add Employee</button>
+                <button onClick={this.clearTimetable}>Clear All</button>
+                {
+                  this.state.selectedEmployee && 
+                  <button onClick={this.clearEmployee}>Clear {this.state.selectedEmployee.name}</button>
+                }
+              </div>
               {
-                this.state.selectedEmployee && 
-                <button onClick={this.clearEmployee}>Clear {this.state.selectedEmployee.name}</button>
+                this.state.newEmployeeForm &&
+                <NewEmployeeForm
+                  state={this.state}
+                  toggleNewEmployeeForm={this.toggleNewEmployeeForm}
+                  submitNewEmployee={this.submitNewEmployee}
+                  onNewEmployeeNameChange={this.onNewEmployeeNameChange}
+                  onNewEmployeeHoursChange={this.onNewEmployeeHoursChange}/>
+              }
+              <Calendar state={this.state} generateMonth={this.generateMonth}/>
+              <div className="timesSelection">
+                <span>Start:</span>
+                <select value={this.state.tempStartHour} onChange={this.onStartHourChange}>
+                  {
+                    this.state.hours.map(hour => 
+                      <option key={hour} value={hour}>{hour}</option>  
+                    )
+                  }
+                </select>
+                <span>End:</span>
+                <select value={this.state.tempEndHour} onChange={this.onEndHourChange}>
+                  {
+                    this.state.hours.map(hour => 
+                      <option key={hour} value={hour}>{hour}</option>  
+                    )
+                  }
+                </select>
+                <button onClick={this.onSubmitNewHours}>Submit</button>
+              </div>
+              {
+                this.state.wrongTimeSelection &&
+                <span>Confucius said, 'Things must begin before they end'</span>
               }
             </div>
-            {
-              this.state.newEmployeeForm &&
-              <NewEmployeeForm
-                state={this.state}
-                toggleNewEmployeeForm={this.toggleNewEmployeeForm}
-                submitNewEmployee={this.submitNewEmployee}
-                onNewEmployeeNameChange={this.onNewEmployeeNameChange}
-                onNewEmployeeHoursChange={this.onNewEmployeeHoursChange}/>
-            }
-            <Calendar state={this.state}/>
-            <div className="timesSelection">
-              <span>Start:</span>
-              <select value={this.state.startHour} onChange={this.onStartHourChange}>
+            <div className="weekTitle">
+              <h2>WEEK</h2>
+              <h2>MONTH YEAR</h2>
+            </div>
+            <div className="dayLabels">
                 {
-                  this.state.timetable.monday.map(hour => 
-                    <option key={Object.keys(hour)[0]} value={Object.keys(hour)[0]}>{Object.keys(hour)[0]}</option>  
+                  this.state.daysOfTheWeek.map(day =>
+                    <div key={day}>{day.charAt(0).toUpperCase() + day.slice(1)}</div>
                   )
                 }
-              </select>
-              <span>End:</span>
-              <select value={this.state.endHour} onChange={this.onEndHourChange}>
+            </div>
+            <div className="timetableContainer">
+              <div className="hourLabels">
                 {
-                  this.state.timetable.monday.map(hour => 
-                    <option key={Object.keys(hour)[0]} value={Object.keys(hour)[0]}>{Object.keys(hour)[0]}</option>  
+                this.state.timetable.monday
+                  .filter(hour => {
+                    return (
+                      Object.keys(hour)[0].slice(0,2) <=  this.state.endHour.slice(0,2) && 
+                      Object.keys(hour)[0] > this.state.startHour.slice(0,2) )
+                    }
+                  )
+                  .map(hour =>
+                    <p key={Object.keys(hour)[0]}>{Object.keys(hour)[0]}</p>  
                   )
                 }
-              </select>
-              <button onClick={this.onSubmitNewHours}>Submit</button>
+              </div>
+
+              {
+                this.state.daysOfTheWeek.map(day =>
+                  <div key={day} className="day">
+                    {this.state.timetable[day]
+                      .filter(hour => {
+                        return (
+                          Object.keys(hour)[0].slice(0,2) <=  this.state.endHour.slice(0,2) && 
+                          Object.keys(hour)[0] > this.state.startHour.slice(0,2) )
+                        }
+                      )
+                      .map(hour =>
+                        <Hour key={Object.keys(hour)[0]}
+                              state={this.state}
+                              removeEmployee={this.removeEmployee} 
+                              addEmployee={this.addEmployee}
+                              day={day}
+                              hourKey={Object.keys(hour)[0]}/>
+                    )}
+                  </div>
+                )
+              }
             </div>
-            {
-              this.state.wrongTimeSelection &&
-              <span>Confucius said, 'Things must begin before they end'</span>
-            }
-          </div>
-          <div className="weekTitle">
-            <h2>WEEK</h2>
-            <h2>MONTH YEAR</h2>
-          </div>
-          <div className="dayLabels">
-              <div>Monday</div>
-              <div>Tuesday</div>
-              <div>Wednesday</div>
-              <div>Thursday</div>
-              <div>Friday</div>
-              <div>Saturday</div>
-              <div>Sunday</div>
-          </div>
-          <div className="timetableContainer">
-            <div className="hourLabels">
-              {this.state.timetable.monday.map(hour =>
-                <p key={Object.keys(hour)[0]}>{Object.keys(hour)[0]}</p>  
-              )}
             </div>
-            <div className="day">
-              {this.state.timetable.monday.map(hour =>
-                <Hour key={Object.keys(hour)[0]}
-                      state={this.state}
-                      removeEmployee={this.removeEmployee} 
-                      addEmployee={this.addEmployee}
-                      day="monday"
-                      hourKey={Object.keys(hour)[0]}/>
-              )}
-            </div>
-            <div className="day">
-              {this.state.timetable.tuesday.map(hour =>
-                <Hour key={Object.keys(hour)[0]}
-                      state={this.state}
-                      removeEmployee={this.removeEmployee} 
-                      addEmployee={this.addEmployee}
-                      day="tuesday"
-                      hourKey={Object.keys(hour)[0]}/>
-              )}
-            </div>
-            <div className="day">
-              {this.state.timetable.wednesday.map(hour =>
-                <Hour key={Object.keys(hour)[0]}
-                      state={this.state}
-                      removeEmployee={this.removeEmployee} 
-                      addEmployee={this.addEmployee}
-                      day="wednesday"
-                      hourKey={Object.keys(hour)[0]}/>
-              )}
-            </div>
-            <div className="day">
-              {this.state.timetable.thursday.map(hour =>
-                <Hour key={Object.keys(hour)[0]}
-                      state={this.state}
-                      removeEmployee={this.removeEmployee} 
-                      addEmployee={this.addEmployee}
-                      day="thursday"
-                      hourKey={Object.keys(hour)[0]}/>
-              )}
-            </div>
-            <div className="day">
-              {this.state.timetable.friday.map(hour =>
-                <Hour key={Object.keys(hour)[0]}
-                      state={this.state}
-                      removeEmployee={this.removeEmployee} 
-                      addEmployee={this.addEmployee}
-                      day="friday"
-                      hourKey={Object.keys(hour)[0]}/>
-              )}
-            </div>
-            <div className="day">
-              {this.state.timetable.saturday.map(hour =>
-                <Hour key={Object.keys(hour)[0]}
-                      state={this.state}
-                      removeEmployee={this.removeEmployee} 
-                      addEmployee={this.addEmployee}
-                      day="saturday"
-                      hourKey={Object.keys(hour)[0]}/>
-              )}
-            </div>
-            <div className="day">
-              {this.state.timetable.sunday.map(hour =>
-                <Hour key={Object.keys(hour)[0]}
-                      state={this.state}
-                      removeEmployee={this.removeEmployee} 
-                      addEmployee={this.addEmployee}
-                      day="sunday"
-                      hourKey={Object.keys(hour)[0]}/>
-              )}
-            </div>
-          </div>
-          </div>
+          </div>}
         </div>
     );
   }

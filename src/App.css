@@ -1,5 +1,4 @@
 body {
-  padding-left: 100px;
 }
 
 .appContainer {
@@ -61,11 +60,11 @@ body {
 .timetableContainer {
   display: flex;
   flex-direction: row;
-  margin-left: 350px;
+  margin-left: 400px;
 }
 
 .dayLabels {
-  margin-left: 410px;
+  margin-left: 460px;
   display: flex;
   flex-direction: row;
 }
@@ -93,14 +92,27 @@ ul {
   margin: 0;
 }
 
+/* CAROUSEL */
+
 .carousel {
   display: flex;
   flex-direction: row;
   margin-bottom: 10px;
 }
 
-.carousel > div:not(:last-child) {
-  margin-right: 10px;
+.employeeBlock{ 
+  width: 50px;
+  height: 40px;
+  border: 1px solid green;
+  box-sizing: border-box
+}
+
+.employeeBlock:not(:first-child) {
+  margin-left: 5px;
+}
+
+.employeeBlock div:first-child:hover {
+  cursor: pointer;
 }
 
 
