@@ -10,6 +10,7 @@ import { Calendar } from './Calendar.js';
 import { NewEmployeeForm } from './NewEmployeeForm.js';
 
 import { tempTimetable } from './tempTimetable.js';
+import { timetables2018, Timetable } from './tempYear.js';
 
 class App extends Component {
 
@@ -37,7 +38,8 @@ class App extends Component {
         {name: 'Janus', totalHours: 0, hoursWanted: 77, _id: '6'},
         {name: 'Jort', totalHours: 0, hoursWanted: 35, _id: '7'},
       ],
-      timetable: tempTimetable,
+      timetable: null,
+      allTimetables: null,
       daysOfTheWeek: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'],
       hours: ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00' ],
       dayLetters: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
@@ -60,10 +62,16 @@ class App extends Component {
     this.onSubmitNewHours = this.onSubmitNewHours.bind(this);
     this.clearHiddenHours = this.clearHiddenHours.bind(this);
     this.generateWeekID = this.generateWeekID.bind(this);
+    this.parseWeekID = this.parseWeekID.bind(this);
+    this.setTimetable = this.setTimetable.bind(this);
+    this.setSelectedWeek = this.setSelectedWeek.bind(this);
+    this.setSelectedDate = this.setSelectedDate.bind(this);
+    this.getEmployeeTotalHours = this.getEmployeeTotalHours.bind(this);
+    this.testFunc = this.testFunc.bind(this);
   }
 
   componentDidMount() {
-    this.setState({ timetable: tempTimetable})
+    this.setState({ allTimetables: timetables2018})
   }
 
   removeEmployee(employeeToRemove, day, hourKey) {
@@ -248,19 +256,19 @@ class App extends Component {
     this.setState({ timetable: newTimetable, employees: newEmployees })
   }
 
-  generateMonth() {
+  generateMonth(selectedDate, daysInMonth) {
     //TODO: Add capabality for leap year
-    let firstDay = new Date(this.state.selectedDate.getFullYear(), this.state.selectedDate.getMonth(), 1).getDay();
+    let firstDay = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1).getDay();
     //Date object week starts with sunday as 0. Here reassigning first day to 7 if 0.
     if (firstDay === 0 ) { firstDay = 7 }
-    const month = this.state.selectedDate.getMonth();
+    const month = selectedDate.getMonth();
     //Creates an array of numbers from 0 to 
-    const daysArr = Array.apply(null, {length: this.state.daysInMonth[month] + 1}).map(Number.call, Number);
+    const daysArr = Array.apply(null, {length: daysInMonth[month] + 1}).map(Number.call, Number);
     daysArr.shift();
 
     if ( firstDay > 1 ) {
         const previousMonth = month === 0 ? 11 : month-1;
-        const previousMonthDays = this.state.daysInMonth[previousMonth];
+        const previousMonthDays = daysInMonth[previousMonth];
         const previousMonthDaysArr = Array.apply(null, {length: previousMonthDays + 1}).map(Number.call, Number);
         previousMonthDaysArr.shift();
         for (let i = 1; i < firstDay; i++) {
@@ -291,36 +299,86 @@ class App extends Component {
         // If monday of first week is in previous month
         if (weekArr[0] > 20) {
             let newMonth = month > 0 ? month - 1 : 11;
-            weekID = `${weekID}-${newMonth}-${month}-${weekArr[0]}-${weekArr[6]}}`;
+            weekID = `${weekID}-${newMonth}-${weekArr[0]}-${month}-${weekArr[6]}`;
             return weekID
         }
         else {
-            weekID = `${weekID}-${month}-${month}-${weekArr[0]}-${weekArr[6]}}`;
+            weekID = `${weekID}-${month}-${weekArr[0]}-${month}-${weekArr[6]}`;
             return weekID;
         }
     }
     else if (weekIndex === 4 || weekIndex === 5) {
         if (weekArr[6] < 20) {
             let newMonth = month < 11 ? month + 1 : 0;
-            weekID = `${weekID}-${month}-${newMonth}-${weekArr[0]}-${weekArr[6]}}`;
+            weekID = `${weekID}-${month}-${weekArr[0]}-${newMonth}-${weekArr[6]}`;
             return weekID;
         }
         else {
-            weekID = `${weekID}-${month}-${month}-${weekArr[0]}-${weekArr[6]}}`;
+            weekID = `${weekID}-${month}-${weekArr[0]}-${month}-${weekArr[6]}`;
             return weekID; 
         }
     }
     else {
-        weekID = `${weekID}-${month}-${month}-${weekArr[0]}-${weekArr[6]}}`;
+        weekID = `${weekID}-${month}-${weekArr[0]}-${month}-${weekArr[6]}`;
         return weekID;
     }
-}
+  }
+
+  setTimetable(newTimetable) {
+    this.setState({ timetable: newTimetable }, () => {
+      console.log(this.state.timetable);
+      console.log(this.state.allTimetables)
+    })
+  }
+
+  setSelectedWeek(newWeekID) {
+    this.setState({ selectedWeek: newWeekID }, 
+      () => {this.setTimetable({...this.state.allTimetables[this.state.selectedWeek]})})
+  }
+
+  setSelectedDate(newDate) {
+    this.setState({ selectedDate: newDate })
+  }
+
+  parseWeekID(weekID) {
+    if (weekID) {
+      const weekIDArr = weekID.split('-');
+      return weekIDArr
+    }
+    else {
+      return []
+    }
+  }
+
+  getEmployeeTotalHours(id, timetable) {
+    let count = 0;
+    timetable.days.forEach(day => {
+        timetable[day].forEach(hourObj => {
+            if (hourObj[Object.keys(hourObj)[0]].length > 0) {
+              hourObj[Object.keys(hourObj)[0]].forEach(employee => {
+                if (employee._id === id) {
+                  ++count
+                }
+              })
+            }
+            console.log(hourObj)
+        })
+    })
+    console.log(timetable)
+    return count;
+  }
+
+  testFunc() {
+    console.log(this.state.timetable.getEmployeeTotalHours(this.state.selectedEmployee._id))
+  }
 
   render() {
+    const weekIDArr = this.parseWeekID(this.state.selectedWeek)
+    
     return (
       <div className="App">
-      
-        {this.state.timetable && 
+        <button onClick={this.testFunc}>TEST</button>
+        {true && 
         <div>
           <Navbar/>
           <div className="appContainer">
@@ -343,7 +401,19 @@ class App extends Component {
                   onNewEmployeeNameChange={this.onNewEmployeeNameChange}
                   onNewEmployeeHoursChange={this.onNewEmployeeHoursChange}/>
               }
-              <Calendar state={this.state} generateMonth={this.generateMonth} generateWeekID={this.generateWeekID}/>
+              { this.state.allTimetables &&
+                <Calendar 
+                  monthLabels={this.state.monthLabels}
+                  daysInMonth={this.state.daysInMonth}
+                  selectedDate={this.state.selectedDate}
+                  selectedWeek={this.state.selectedWeek}
+                  dayLetters={this.state.dayLetters}
+                  generateMonth={this.generateMonth} 
+                  generateWeekID={this.generateWeekID}
+                  setTimetable={this.setTimetable}
+                  setSelectedWeek={this.setSelectedWeek}
+                  setSelectedDate={this.setSelectedDate}/>
+              }
               <div className="timesSelection">
                 <span>Start:</span>
                 <select value={this.state.tempStartHour} onChange={this.onStartHourChange}>
@@ -368,37 +438,27 @@ class App extends Component {
                 <span>Confucius said, 'Things must begin before they end'</span>
               }
             </div>
-            <div className="weekTitle">
-              <h2>WEEK</h2>
-              <h2>MONTH YEAR</h2>
-            </div>
-            <div className="dayLabels">
-                {
-                  this.state.daysOfTheWeek.map(day =>
-                    <div key={day}>{day.charAt(0).toUpperCase() + day.slice(1)}</div>
-                  )
-                }
-            </div>
-            <div className="timetableContainer">
-              <div className="hourLabels">
-                {
-                this.state.timetable.monday
-                  .filter(hour => {
-                    return (
-                      Object.keys(hour)[0].slice(0,2) <=  this.state.endHour.slice(0,2) && 
-                      Object.keys(hour)[0] > this.state.startHour.slice(0,2) )
-                    }
-                  )
-                  .map(hour =>
-                    <p key={Object.keys(hour)[0]}>{Object.keys(hour)[0]}</p>  
-                  )
-                }
-              </div>
 
-              {
-                this.state.daysOfTheWeek.map(day =>
-                  <div key={day} className="day">
-                    {this.state.timetable[day]
+            { this.state.timetable &&
+              <div>
+                {
+                  this.state.selectedWeek &&
+                  <div className="weekTitle">
+                    <h2>{weekIDArr[2]}th {this.state.monthLabels[weekIDArr[1]]} - {weekIDArr[4]}th {this.state.monthLabels[weekIDArr[3]]}</h2>
+                  </div>
+                }
+                <div className="dayLabels">
+                  {
+                    this.state.daysOfTheWeek.map(day =>
+                      <div key={day}>{day.charAt(0).toUpperCase() + day.slice(1)}</div>
+                    )
+                  }
+                </div>
+              
+                <div className="timetableContainer">
+                  <div className="hourLabels">
+                    {
+                    this.state.timetable.monday
                       .filter(hour => {
                         return (
                           Object.keys(hour)[0].slice(0,2) <=  this.state.endHour.slice(0,2) && 
@@ -406,17 +466,34 @@ class App extends Component {
                         }
                       )
                       .map(hour =>
-                        <Hour key={Object.keys(hour)[0]}
-                              state={this.state}
-                              removeEmployee={this.removeEmployee} 
-                              addEmployee={this.addEmployee}
-                              day={day}
-                              hourKey={Object.keys(hour)[0]}/>
-                    )}
+                        <p key={Object.keys(hour)[0]}>{Object.keys(hour)[0]}</p>  
+                      )
+                    }
                   </div>
-                )
-              }
-            </div>
+
+                  {
+                    this.state.daysOfTheWeek.map(day =>
+                      <div key={day} className="day">
+                        {this.state.timetable[day]
+                          .filter(hour => {
+                            return (
+                              Object.keys(hour)[0].slice(0,2) <=  this.state.endHour.slice(0,2) && 
+                              Object.keys(hour)[0].slice(0,2) >= this.state.startHour.slice(0,2) )
+                            }
+                          )
+                          .map(hour =>
+                            <Hour key={Object.keys(hour)[0]}
+                                  state={this.state}
+                                  removeEmployee={this.removeEmployee} 
+                                  addEmployee={this.addEmployee}
+                                  day={day}
+                                  hourKey={Object.keys(hour)[0]}/>
+                        )}
+                      </div>
+                    )
+                  }
+                </div>
+              </div>}
             </div>
           </div>}
         </div>

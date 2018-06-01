@@ -4,50 +4,84 @@ import FontAwesome from 'react-fontawesome';
 export class Calendar extends Component {
     constructor(props) {
         super(props);
-
-        this.state = props.state;
-        this.generateMonth = props.generateMonth;
-        this.generateWeekID = props.generateWeekID;
         
-        this.toggleCalendar = this.toggleCalendar.bind(this);
+        // this.generateMonth = props.generateMonth;
+        // this.generateWeekID = props.generateWeekID;
+        // this.setTimetable = props.setTimetable;
+        // this.setSelectedWeek = props.setSelectedWeek;
+        // this.setSelectedDate = props.setSelectedDate;
+
+        // this.monthLabels = props.monthLabels;
+        // this.daysInMonth = props.daysInMonth;
+        // this.selectedDate = props.selectedDate;
+        // this.selectedWeek = props.selectedWeek;
+        // this.dayLetters = props.dayLetters;
+
+        this.state = {
+            generateMonth: this.props.generateMonth,
+            generateWeekID: this.props.generateWeekID,
+            setTimetable: this.props.setTimetable,
+            setSelectedWeek: this.props.setSelectedWeek,
+            setSelectedDate: this.props.setSelectedDate,
+    
+            monthLabels: this.props.monthLabels,
+            daysInMonth: this.props.daysInMonth,
+            selectedDate: this.props.selectedDate,
+            selectedWeek: this.props.selectedWeek,
+            dayLetters: this.props.dayLetters,
+        }
+
+        
         this.homeMonth = this.homeMonth.bind(this);
         this.calendarRight = this.calendarRight.bind(this);
         this.calendarLeft = this.calendarLeft.bind(this);
-        this.setSelectedWeek = this.setSelectedWeek.bind(this);
+        // this.setSelectedWeek = this.setSelectedWeek.bind(this);
+        this.testFunc = this.testFunc.bind(this);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.setState({ 
+            selectedDate: nextProps.selectedDate, 
+            selectedWeek: nextProps.selectedWeek 
+        })
     }
 
     homeMonth() {
-        this.setState({ selectedDate: new Date() })
+        // this.setState({ selectedDate: new Date() })
+        this.state.setSelectedDate(new Date())
     }
 
     calendarRight() {
         const [ currentMonth, currentYear ] = [ this.state.selectedDate.getMonth(), this.state.selectedDate.getFullYear() ]
         const newMonth = currentMonth + 1;
-        this.setState({ selectedDate: new Date(currentYear, newMonth)})
+        // this.setState({ selectedDate: new Date(currentYear, newMonth)})
+        this.state.setSelectedDate(new Date(currentYear, newMonth));
     }
 
     calendarLeft() {
         const [ currentMonth, currentYear ] = [ this.state.selectedDate.getMonth(), this.state.selectedDate.getFullYear() ];
         const newMonth = currentMonth - 1;
-        this.setState({ selectedDate: new Date(currentYear, newMonth)});
+        console.log(currentMonth);
+        console.log(newMonth)
+        // this.setState({ selectedDate: new Date(currentYear, newMonth)});
+        console.log(new Date(currentYear, newMonth))
+        this.state.setSelectedDate(new Date(currentYear, newMonth))
     }
 
-    toggleCalendar() {
-        this.setState({ calendarDisplayed: !this.state.calendarDisplayed })
-    }
-
-    setSelectedWeek(weekID) {
-        this.setState({ selectedWeek: weekID })
+    testFunc() {
+        console.log(this.state.selectedDate);
     }
 
     render() {
-
-        const daysInWeeksArr = this.generateMonth()
-
+        const selectedDate = this.state.selectedDate;
+        const selectedWeek = this.state.selectedWeek;
+        
+        const daysInWeeksArr = this.state.generateMonth(selectedDate, this.state.daysInMonth)
         return (
             <div className="calendarContainer">
+                <button onClick={this.testFunc}>TEST</button>
                 <div className="calendarNavbar">
-                    <div>{this.state.monthLabels[this.state.selectedDate.getMonth()]} {this.state.selectedDate.getFullYear()}</div>
+                    <div>{this.state.monthLabels[selectedDate.getMonth()]} {selectedDate.getFullYear()}</div>
                     <div className="calendarArrows">
                         <span onClick={this.homeMonth}><FontAwesome name='home'/></span> 
                         <span onClick={this.calendarLeft}><FontAwesome name='angle-left'/></span> 
@@ -66,12 +100,12 @@ export class Calendar extends Component {
                         {
                             daysInWeeksArr.map((week, index) => 
                                 {
-                                    let weekID = this.generateWeekID(this.state.selectedDate.getFullYear(), this.state.selectedDate.getMonth(), week, index);
+                                    let weekID = this.state.generateWeekID(selectedDate.getFullYear(), selectedDate.getMonth(), week, index);
                                     return (
                                         <div    key={index} 
-                                                className={`weekRow ${weekID === this.state.selectedWeek ? "selectedWeek" : ''}`} 
+                                                className={`weekRow ${weekID === selectedWeek ? "selectedWeek" : ''}`} 
                                                 id={weekID}
-                                                onClick={() => this.setSelectedWeek(weekID)}>
+                                                onClick={() => this.state.setSelectedWeek(weekID)}>
                                             {week.map((date, index) => 
                                                 <div key={index} className="dayInRow">{date}</div>
                                             )}
