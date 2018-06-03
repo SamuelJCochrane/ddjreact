@@ -3,6 +3,7 @@
 const daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
 export class Timetable {
+    // TODO: turn days into objects
     constructor() {
       this.monday = [
         {'00:00': []},
@@ -218,6 +219,7 @@ export class Timetable {
       this.clearAllEmployees = this.clearAllEmployees.bind(this);
       this.clearEmployee = this.clearEmployee.bind(this);
       this.addEmployee = this.addEmployee.bind(this);
+      
 
     }
 
@@ -265,9 +267,22 @@ export class Timetable {
         })
     }
     
-
     addEmployee(employee, day, hourKey) {
         this[day][Number(hourKey.slice(0,2))][Object.keys(this[day][Number(hourKey.slice(0,2))])[0]].push(employee);
+    }
+
+    getEmployeeHours(id) {
+        let count = 0;
+        this.days.forEach(day => {
+            this[day].forEach(hourObj => {
+                let hourArr = Object.keys(hourObj)[0];
+                hourArr.forEach(employee => {
+                    if (employee._id === id) {
+                        ++count 
+                    }
+                })
+            })
+        })
     }
 
 

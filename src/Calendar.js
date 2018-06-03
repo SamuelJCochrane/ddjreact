@@ -23,6 +23,7 @@ export class Calendar extends Component {
             setTimetable: this.props.setTimetable,
             setSelectedWeek: this.props.setSelectedWeek,
             setSelectedDate: this.props.setSelectedDate,
+            updateEmployeeHours: this.props.updateEmployeeHours,
     
             monthLabels: this.props.monthLabels,
             daysInMonth: this.props.daysInMonth,

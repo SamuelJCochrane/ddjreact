@@ -92,7 +92,7 @@ class App extends Component {
     // })
     // this.setState({ timetable: newTimetable, employees: newEmployeesData });
     this.state.timetable.removeEmployee(employeeToRemove, day, hourKey);
-    this.setState({ timetable: this.state.timetable })
+    this.setState({ timetable: this.state.timetable }, this.updateEmployeeHours)
   }
 
   selectEmployee(employee) {
@@ -128,7 +128,7 @@ class App extends Component {
     // }
     if (this.state.selectedEmployee) {
       this.state.timetable.addEmployee(this.state.selectedEmployee, day, hourKey);
-      this.setState({ timetable: this.state.timetable });
+      this.setState({ timetable: this.state.timetable }, this.updateEmployeeHours);
     }
   }
 
@@ -147,7 +147,7 @@ class App extends Component {
     // })
     // this.setState({timetable: newTimetable, employees: newEmployeesData})
     this.state.timetable.clearAllEmployees();
-    this.setState({ timetable: this.state.timetable });
+    this.setState({ timetable: this.state.timetable }, this.updateEmployeeHours);
   }
 
   clearEmployee() {
@@ -167,7 +167,7 @@ class App extends Component {
 
     // this.setState({ employees: newEmployeesData })
     this.state.timetable.clearEmployee(this.state.selectedEmployee._id)
-    this.setState({ timetable: this.state.timetable })
+    this.setState({ timetable: this.state.timetable }, this.updateEmployeeHours)
   }
 
   toggleNewEmployeeForm() {
@@ -335,15 +335,13 @@ class App extends Component {
   }
 
   setTimetable(newTimetable) {
-    this.setState({ timetable: newTimetable }, () => {
-      console.log(this.state.timetable);
-      console.log(this.state.allTimetables)
-    })
+    this.setState({ timetable: newTimetable }, this.updateEmployeeHours)
   }
 
   setSelectedWeek(newWeekID) {
-    this.setState({ selectedWeek: newWeekID }, 
-      () => {this.setTimetable({...this.state.allTimetables[this.state.selectedWeek]})})
+    this.setState({ selectedWeek: newWeekID }, () => {
+        this.setTimetable({...this.state.allTimetables[this.state.selectedWeek]});
+      })
   }
 
   setSelectedDate(newDate) {
@@ -376,6 +374,19 @@ class App extends Component {
     })
     console.log(timetable)
     return count;
+  }
+
+  updateEmployeeHours() {
+    if (this.state.timetable) {
+      let newEmployees = [...this.state.employees];
+      newEmployees.forEach(employee => {
+        let count = this.state.timetable.getEmployeeTotalHours(employee._id)
+        employee.totalHours = count;
+      })
+      console.log(this.state.employees)
+      console.log(newEmployees);
+      this.setState({ employees: newEmployees });
+    }
   }
 
   testFunc() {
