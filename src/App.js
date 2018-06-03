@@ -75,22 +75,24 @@ class App extends Component {
   }
 
   removeEmployee(employeeToRemove, day, hourKey) {
-    const newEmployees = this.state.timetable[day][Number(hourKey.slice(0, 2))][hourKey].filter(
-      employee => {
-        return employee._id !== employeeToRemove._id
-      }
-    );
-    const newTimetable = {...this.state.timetable};
-    newTimetable[day][Number(hourKey.slice(0, 2))][hourKey] = newEmployees;
-    const newEmployeesData = this.state.employees.map(employee => {
-      if (employee._id === employeeToRemove._id && employee.totalHours > 0) {
-        const newEmployee = {...employee};
-        newEmployee.totalHours = newEmployee.totalHours - 1
-        return newEmployee
-      }
-      else {return employee}
-    })
-    this.setState({ timetable: newTimetable, employees: newEmployeesData });
+    // const newEmployees = this.state.timetable[day][Number(hourKey.slice(0, 2))][hourKey].filter(
+    //   employee => {
+    //     return employee._id !== employeeToRemove._id
+    //   }
+    // );
+    // const newTimetable = {...this.state.timetable};
+    // newTimetable[day][Number(hourKey.slice(0, 2))][hourKey] = newEmployees;
+    // const newEmployeesData = this.state.employees.map(employee => {
+    //   if (employee._id === employeeToRemove._id && employee.totalHours > 0) {
+    //     const newEmployee = {...employee};
+    //     newEmployee.totalHours = newEmployee.totalHours - 1
+    //     return newEmployee
+    //   }
+    //   else {return employee}
+    // })
+    // this.setState({ timetable: newTimetable, employees: newEmployeesData });
+    this.state.timetable.removeEmployee(employeeToRemove, day, hourKey);
+    this.setState({ timetable: this.state.timetable })
   }
 
   selectEmployee(employee) {
@@ -100,64 +102,72 @@ class App extends Component {
   }
 
   addEmployee(day, hourKey) {
-    if ( this.state.selectedEmployee ) {
-      if (this.state.timetable[day][Number(hourKey.slice(0, 2))][hourKey]) {
-        let employeeInHour;
-        this.state.timetable[day][Number(hourKey.slice(0, 2))][hourKey].forEach(employee => {
-          if (employee._id === this.state.selectedEmployee._id) {
-            employeeInHour = true;
-          }
-        })
-        if ( !employeeInHour ) {
-          const newTimetable = {...this.state.timetable}
-          const newEmployees = [...this.state.timetable[day][Number(hourKey.slice(0, 2))][hourKey], this.state.selectedEmployee]
-          newTimetable[day][Number(hourKey.slice(0, 2))][hourKey] = newEmployees;
-          const newEmployeesData = this.state.employees.map(employee => {
-            if (employee._id === this.state.selectedEmployee._id) {
-              const newEmployee = {...employee};
-              ++newEmployee.totalHours
-              return newEmployee
-            }
-            else {return employee}
-          })
-          this.setState({ timetable: newTimetable, employees: newEmployeesData });
-        }
-      }
+    // if ( this.state.selectedEmployee ) {
+    //   if (this.state.timetable[day][Number(hourKey.slice(0, 2))][hourKey]) {
+    //     let employeeInHour;
+    //     this.state.timetable[day][Number(hourKey.slice(0, 2))][hourKey].forEach(employee => {
+    //       if (employee._id === this.state.selectedEmployee._id) {
+    //         employeeInHour = true;
+    //       }
+    //     })
+    //     if ( !employeeInHour ) {
+    //       const newTimetable = {...this.state.timetable}
+    //       const newEmployees = [...this.state.timetable[day][Number(hourKey.slice(0, 2))][hourKey], this.state.selectedEmployee]
+    //       newTimetable[day][Number(hourKey.slice(0, 2))][hourKey] = newEmployees;
+    //       const newEmployeesData = this.state.employees.map(employee => {
+    //         if (employee._id === this.state.selectedEmployee._id) {
+    //           const newEmployee = {...employee};
+    //           ++newEmployee.totalHours
+    //           return newEmployee
+    //         }
+    //         else {return employee}
+    //       })
+    //       this.setState({ timetable: newTimetable, employees: newEmployeesData });
+    //     }
+    //   }
+    // }
+    if (this.state.selectedEmployee) {
+      this.state.timetable.addEmployee(this.state.selectedEmployee, day, hourKey);
+      this.setState({ timetable: this.state.timetable });
     }
   }
 
   clearTimetable() {
-    const newTimetable = {...this.state.timetable};
-    Object.keys(newTimetable).forEach(day => {
-      newTimetable[day].forEach(hour => {
-        hour[Object.keys(hour)[0]] = [];
-      })
-    })
+    // const newTimetable = {...this.state.timetable};
+    // Object.keys(newTimetable).forEach(day => {
+    //   newTimetable[day].forEach(hour => {
+    //     hour[Object.keys(hour)[0]] = [];
+    //   })
+    // })
 
-    const newEmployeesData = this.state.employees.map(employee => {
-      const newEmployee = {...employee};
-      newEmployee.totalHours = 0;
-      return newEmployee;
-    })
-    this.setState({timetable: newTimetable, employees: newEmployeesData})
+    // const newEmployeesData = this.state.employees.map(employee => {
+    //   const newEmployee = {...employee};
+    //   newEmployee.totalHours = 0;
+    //   return newEmployee;
+    // })
+    // this.setState({timetable: newTimetable, employees: newEmployeesData})
+    this.state.timetable.clearAllEmployees();
+    this.setState({ timetable: this.state.timetable });
   }
 
   clearEmployee() {
-    Object.keys(this.state.timetable).forEach(dayKey => {
-      this.state.timetable[dayKey].forEach(hourObj => {
-        this.removeEmployee(this.state.selectedEmployee, dayKey, Object.keys(hourObj)[0])
-      })
-    })
+    // Object.keys(this.state.timetable).forEach(dayKey => {
+    //   this.state.timetable[dayKey].forEach(hourObj => {
+    //     this.removeEmployee(this.state.selectedEmployee, dayKey, Object.keys(hourObj)[0])
+    //   })
+    // })
 
-    const newEmployeesData = this.state.employees.map(employee => {
-      const newEmployee = {...employee};
-      if ( newEmployee._id === this.state.selectedEmployee._id ) {
-        newEmployee.totalHours = 0;
-      }
-      return newEmployee;
-    })
+    // const newEmployeesData = this.state.employees.map(employee => {
+    //   const newEmployee = {...employee};
+    //   if ( newEmployee._id === this.state.selectedEmployee._id ) {
+    //     newEmployee.totalHours = 0;
+    //   }
+    //   return newEmployee;
+    // })
 
-    this.setState({ employees: newEmployeesData })
+    // this.setState({ employees: newEmployeesData })
+    this.state.timetable.clearEmployee(this.state.selectedEmployee._id)
+    this.setState({ timetable: this.state.timetable })
   }
 
   toggleNewEmployeeForm() {
