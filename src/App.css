@@ -36,6 +36,10 @@ body {
   margin-right: 10px;
 }
 
+.containsEmployee {
+  background-color: rgba(0, 128, 0, 0.404);
+}
+
 .hour {
   position: relative;
   width: 100px;
@@ -121,6 +125,12 @@ ul {
 
 .employeeBlock div:first-child:hover {
   cursor: pointer;
+}
+
+/*OPTIONS*/
+
+.multiChanges {
+  margin-bottom: 20px;
 }
 
 

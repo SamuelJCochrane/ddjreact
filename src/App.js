@@ -30,6 +30,10 @@ class App extends Component {
       tempEndHour: '23:00',
       wrongTimeSelection: false,
       selectedEmployee: null,
+      selectedDay: 'monday',
+      multiStartHour: '06:00',
+      multiEndHour: '23:00',
+
       employees: [
         {name: 'John', totalHours: 0, hoursWanted: 1, _id: '1'},
         {name: 'Jack', totalHours: 0, hoursWanted: 50, _id: '2'},
@@ -52,6 +56,7 @@ class App extends Component {
     this.removeEmployee = this.removeEmployee.bind(this);
     this.selectEmployee = this.selectEmployee.bind(this)
     this.addEmployee = this.addEmployee.bind(this);
+    this.addToMultiHours = this.addToMultiHours.bind(this);
     this.clearTimetable = this.clearTimetable.bind(this);
     this.clearEmployee = this.clearEmployee.bind(this);
     this.toggleNewEmployeeForm = this.toggleNewEmployeeForm.bind(this);
@@ -60,6 +65,9 @@ class App extends Component {
     this.submitNewEmployee = this.submitNewEmployee.bind(this);
     this.onStartHourChange = this.onStartHourChange.bind(this);
     this.onEndHourChange = this.onEndHourChange.bind(this);
+    this.onDayChange = this.onDayChange.bind(this);
+    this.onMultiStartHourChange = this.onMultiStartHourChange.bind(this);
+    this.onMultiEndHourChange = this.onMultiEndHourChange.bind(this);
     this.onSubmitNewHours = this.onSubmitNewHours.bind(this);
     this.clearHiddenHours = this.clearHiddenHours.bind(this);
     this.generateWeekID = this.generateWeekID.bind(this);
@@ -105,33 +113,26 @@ class App extends Component {
   }
 
   addEmployee(day, hourKey) {
-    // if ( this.state.selectedEmployee ) {
-    //   if (this.state.timetable[day][Number(hourKey.slice(0, 2))][hourKey]) {
-    //     let employeeInHour;
-    //     this.state.timetable[day][Number(hourKey.slice(0, 2))][hourKey].forEach(employee => {
-    //       if (employee._id === this.state.selectedEmployee._id) {
-    //         employeeInHour = true;
-    //       }
-    //     })
-    //     if ( !employeeInHour ) {
-    //       const newTimetable = {...this.state.timetable}
-    //       const newEmployees = [...this.state.timetable[day][Number(hourKey.slice(0, 2))][hourKey], this.state.selectedEmployee]
-    //       newTimetable[day][Number(hourKey.slice(0, 2))][hourKey] = newEmployees;
-    //       const newEmployeesData = this.state.employees.map(employee => {
-    //         if (employee._id === this.state.selectedEmployee._id) {
-    //           const newEmployee = {...employee};
-    //           ++newEmployee.totalHours
-    //           return newEmployee
-    //         }
-    //         else {return employee}
-    //       })
-    //       this.setState({ timetable: newTimetable, employees: newEmployeesData });
-    //     }
-    //   }
-    // }
     if (this.state.selectedEmployee) {
       this.state.timetable.addEmployee(this.state.selectedEmployee, day, hourKey);
       this.setState({ timetable: this.state.timetable }, this.updateEmployeeHours);
+    }
+  }
+
+  addToMultiHours() {
+    console.log(this.state.selectedEmployee)
+    console.log(this.state.multiStartHour)
+    console.log(this.state.multiEndHour)
+    if (this.state.timetable && this.state.selectedEmployee && this.state.multiStartHour && this.state.multiEndHour) {
+      const hoursArr = this.state.hours.slice(
+        this.state.hours.indexOf(this.state.multiStartHour),
+        this.state.hours.indexOf(this.state.multiEndHour) + 1
+      )
+      hoursArr.forEach(hour => {
+        console.log(this.state.selectedDay)
+        console.log(hour)
+        this.addEmployee(this.state.selectedDay, hour)
+      })
     }
   }
 
@@ -205,6 +206,18 @@ class App extends Component {
     else {
       this.setState({ wrongTimeSelection: true })
     }
+  }
+
+  onDayChange(event) {
+    this.setState({ selectedDay: event.target.value })
+  }
+
+  onMultiStartHourChange(event) {
+    this.setState({ multiStartHour: event.target.value })
+  }
+
+  onMultiEndHourChange(event) {
+    this.setState({ multiEndHour: event.target.value })
   }
 
   onSubmitNewHours(event) {
@@ -436,7 +449,7 @@ class App extends Component {
     // .catch(error => {
     //   console.log(error)
     // })
-    console.log(this.state.allTimetables);
+    console.log(this.state.tempEndHour);
   }
 
   render() {
@@ -451,9 +464,66 @@ class App extends Component {
           <div className="appContainer">
             <div className="buttonAndCarouselContainer">      
               <Carousel state={this.state} selectEmployee={this.selectEmployee}/>
+              <div className="multiChanges">
+                Day:
+                <select value={this.state.selectedDay} onChange={this.onDayChange}>
+                  {
+                    this.state.daysOfTheWeek
+                      .map(day => 
+                        <option key={day} value={day}>{day.charAt(0).toUpperCase() + day.slice(1)}</option>  
+                      )
+                  }
+                </select>
+                Start:
+                <select value={this.state.multiStartHour} onChange={this.onMultiStartHourChange}>
+                  {
+                    this.state.hours
+                      .filter(hour => {
+                        if (Number(hour.slice(0,2)) < Number(this.state.tempStartHour.slice(0,2))) {
+                          return false
+                        }
+                        else if (Number(hour.slice(0,2)) > Number(this.state.tempEndHour.slice(0,2)) ) {
+                          return false
+                        }
+                        else {
+                          return true
+                        }                        
+                        }
+                      )
+                      .map(hour => 
+                        <option key={hour} value={hour}>{hour}</option>  
+                      )
+                  }
+                </select>
+                End:
+                <select value={this.state.multiEndHour} onChange={this.onMultiEndHourChange}>
+                  {
+                    this.state.hours
+                      .filter(hour => {
+                        if (Number(hour.slice(0,2)) < Number(this.state.tempStartHour.slice(0,2))) {
+                          return false
+                        }
+                        else if (Number(hour.slice(0,2)) > Number(this.state.tempEndHour.slice(0,2)) ) {
+                          return false
+                        }
+                        else {
+                          return true
+                        }                        
+                        }
+                      )
+                      .map(hour => 
+                        <option key={hour} value={hour}>{hour}</option>  
+                      )
+                  }
+                </select>
+                { 
+                  this.state.selectedEmployee &&
+                  <button onClick={this.addToMultiHours}>Add {this.state.selectedEmployee.name}</button>
+                }
+              </div>
               <div className="buttonArray">
                 <button onClick={this.toggleNewEmployeeForm}>Add Employee</button>
-                <button onClick={this.clearTimetable}>Clear All</button>
+                <button onClick={this.clearTimetable}>Clear Week</button>
                 {
                   this.state.selectedEmployee && 
                   <button onClick={this.clearEmployee}>Clear {this.state.selectedEmployee.name}</button>

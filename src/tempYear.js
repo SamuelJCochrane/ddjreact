@@ -296,10 +296,7 @@ export class Timetable {
                 const hourNum = Number(Object.keys(hourObj)[0].slice(0,2));
                 if ( hourNum < start || hourNum > end ) { 
                     const hourArr = hourObj[Object.keys(hourObj)[0]];
-                    console.log(hourObj);
-                    console.log(hourArr);
                     hourArr.splice(0, hourArr.length);
-                    console.log(hourArr);
                 }
             })
         })
