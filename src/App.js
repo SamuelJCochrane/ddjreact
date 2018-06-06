@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import FontAwesome from 'react-fontawesome';
+import axios from 'axios';
 import './App.css';
 
 //COMPONENTS
@@ -23,9 +24,9 @@ class App extends Component {
       newEmployeeForm: false,
       newEmployeeName: '',
       newEmployeeHours: 0,
-      startHour: '00:00',
+      startHour: '06:00',
       endHour: '23:00',
-      tempStartHour: '00:00',
+      tempStartHour: '06:00',
       tempEndHour: '23:00',
       wrongTimeSelection: false,
       selectedEmployee: null,
@@ -67,10 +68,12 @@ class App extends Component {
     this.setSelectedWeek = this.setSelectedWeek.bind(this);
     this.setSelectedDate = this.setSelectedDate.bind(this);
     this.getEmployeeTotalHours = this.getEmployeeTotalHours.bind(this);
+    this.getTimetables = this.getTimetables.bind(this);
     this.testFunc = this.testFunc.bind(this);
   }
 
   componentDidMount() {
+    // this.getTimetables();
     this.setState({ allTimetables: timetables2018})
   }
 
@@ -211,59 +214,59 @@ class App extends Component {
   }
 
   clearHiddenHours() {
-    const newTimetable = {'monday': [], 'tuesday': [], 'wednesday': [], 'thursday': [], 'friday': [], 'saturday': [], 'sunday': [], }
-    this.state.daysOfTheWeek
-      .forEach(day => 
-        newTimetable[day] =
-        this.state.timetable[day]
-          .map(hourObj => {
-            const hourKey = Object.keys(hourObj)[0];
-            if (hourKey.slice(0,2) < this.state.startHour.slice(0,2) || hourKey.slice(0,2) > this.state.endHour.slice(0,2)) {
-              const tempObj = {}
-              tempObj[hourKey] = []
-              return tempObj
-            } 
-            else {
-              return hourObj
-            }
-          }
-          )
-      )
+    // const newTimetable = {'monday': [], 'tuesday': [], 'wednesday': [], 'thursday': [], 'friday': [], 'saturday': [], 'sunday': [], }
+    // this.state.daysOfTheWeek
+    //   .forEach(day => 
+    //     newTimetable[day] =
+    //     this.state.timetable[day]
+    //       .map(hourObj => {
+    //         const hourKey = Object.keys(hourObj)[0];
+    //         if (hourKey.slice(0,2) < this.state.startHour.slice(0,2) || hourKey.slice(0,2) > this.state.endHour.slice(0,2)) {
+    //           const tempObj = {}
+    //           tempObj[hourKey] = []
+    //           return tempObj
+    //         } 
+    //         else {
+    //           return hourObj
+    //         }
+    //       }
+    //       )
+    //   )
 
-    let employeesToDecreaseIDs = {}
-    for (let day in this.state.timetable) {
-      this.state.timetable[day].forEach(hour => {
-        if (
-          hour[Object.keys(hour)[0]].length > 0 &&
-          (Object.keys(hour)[0].slice(0,2) < this.state.startHour.slice(0,2) ||
-          Object.keys(hour)[0].slice(0,2) > this.state.endHour.slice(0,2))
-        ) 
-        {
-          hour[Object.keys(hour)[0]].forEach(employee => {
-            if (employeesToDecreaseIDs[employee._id]) {
-              ++employeesToDecreaseIDs[employee._id];
-            }
-            else {
-              employeesToDecreaseIDs[employee._id] = 1;
-            }
-          }) 
-        }
-      }
-      )
-    }
+    // let employeesToDecreaseIDs = {}
+    // for (let day in this.state.timetable) {
+    //   this.state.timetable[day].forEach(hour => {
+    //     if (
+    //       hour[Object.keys(hour)[0]].length > 0 &&
+    //       (Object.keys(hour)[0].slice(0,2) < this.state.startHour.slice(0,2) ||
+    //       Object.keys(hour)[0].slice(0,2) > this.state.endHour.slice(0,2))
+    //     ) 
+    //     {
+    //       hour[Object.keys(hour)[0]].forEach(employee => {
+    //         if (employeesToDecreaseIDs[employee._id]) {
+    //           ++employeesToDecreaseIDs[employee._id];
+    //         }
+    //         else {
+    //           employeesToDecreaseIDs[employee._id] = 1;
+    //         }
+    //       }) 
+    //     }
+    //   }
+    //   )
+    // }
 
-    const newEmployees = this.state.employees.map(employee => {
-      for (let employeeToDecreaseID in employeesToDecreaseIDs) {
-        if (employeeToDecreaseID === employee._id) {
-          const newEmployee = {...employee};
-          newEmployee.totalHours -= employeesToDecreaseIDs[employee._id];
-          return newEmployee;
-        }
-      }
-      return employee;
-    })
-
-    this.setState({ timetable: newTimetable, employees: newEmployees })
+    // const newEmployees = this.state.employees.map(employee => {
+    //   for (let employeeToDecreaseID in employeesToDecreaseIDs) {
+    //     if (employeeToDecreaseID === employee._id) {
+    //       const newEmployee = {...employee};
+    //       newEmployee.totalHours -= employeesToDecreaseIDs[employee._id];
+    //       return newEmployee;
+    //     }
+    //   }
+    //   return employee;
+    // })
+    this.state.timetable.clearHiddenHours(Number(this.state.startHour.slice(0,2)), Number(this.state.endHour.slice(0,2)))
+    this.setState({ timetable: this.state.timetable }, this.updateEmployeeHours)
   }
 
   generateMonth(selectedDate, daysInMonth) {
@@ -369,10 +372,8 @@ class App extends Component {
                 }
               })
             }
-            console.log(hourObj)
         })
     })
-    console.log(timetable)
     return count;
   }
 
@@ -383,14 +384,59 @@ class App extends Component {
         let count = this.state.timetable.getEmployeeTotalHours(employee._id)
         employee.totalHours = count;
       })
-      console.log(this.state.employees)
-      console.log(newEmployees);
       this.setState({ employees: newEmployees });
     }
   }
 
+  getTimetables() {
+    let allTimetables;
+    axios({
+      method: 'get',
+      url: '/api/weeks'
+    })
+    .catch(err => {
+      console.log(err)
+    })
+    .then(res => {
+      allTimetables = res.data;
+      console.log(allTimetables)
+      this.constructAllTimetables(allTimetables);
+    })
+  }
+
+  constructAllTimetables(timetables) {
+    const timetables2018 = {}
+    timetables.forEach(table => {
+      const newTimetable = new Timetable();
+      const weekObj = {}
+      this.state.daysOfTheWeek.forEach(day => {
+        weekObj[day] = [...table[day]]
+      })
+      newTimetable.addBulkEmployees(weekObj);
+      timetables2018[table.weekID] = weekObj;
+    })
+    console.log(timetables2018)
+    this.setState({ allTimetables: timetables2018})
+  }
+
   testFunc() {
-    console.log(this.state.timetable.getEmployeeTotalHours(this.state.selectedEmployee._id))
+    // axios({
+    //   method: 'post',
+    //   url: '/api/newUser',
+    //   data: {
+    //     email: 'test4',
+    //     username: 'test4',
+    //     password: 'test4',
+    //     passwordConf: 'test4'
+    //   }
+    // })
+    // .then(response => {
+    //   console.log(response)
+    // })
+    // .catch(error => {
+    //   console.log(error)
+    // })
+    console.log(this.state.allTimetables);
   }
 
   render() {
@@ -398,7 +444,7 @@ class App extends Component {
     
     return (
       <div className="App">
-        <button onClick={this.testFunc}>TEST</button>
+        {/* <button onClick={this.testFunc}>TEST</button> */}
         {true && 
         <div>
           <Navbar/>
@@ -462,20 +508,21 @@ class App extends Component {
 
             { this.state.timetable &&
               <div>
-                {
-                  this.state.selectedWeek &&
-                  <div className="weekTitle">
-                    <h2>{weekIDArr[2]}th {this.state.monthLabels[weekIDArr[1]]} - {weekIDArr[4]}th {this.state.monthLabels[weekIDArr[3]]}</h2>
-                  </div>
-                }
-                <div className="dayLabels">
+                <div className="fixedHeader">
                   {
-                    this.state.daysOfTheWeek.map(day =>
-                      <div key={day}>{day.charAt(0).toUpperCase() + day.slice(1)}</div>
-                    )
+                    this.state.selectedWeek &&
+                    <div className="weekTitle">
+                      <h2>{weekIDArr[2]}th {this.state.monthLabels[weekIDArr[1]]} - {weekIDArr[4]}th {this.state.monthLabels[weekIDArr[3]]}</h2>
+                    </div>
                   }
+                  <div className="dayLabels">
+                    {
+                      this.state.daysOfTheWeek.map(day =>
+                        <div key={day}>{day.charAt(0).toUpperCase() + day.slice(1)}</div>
+                      )
+                    }
+                  </div>
                 </div>
-              
                 <div className="timetableContainer">
                   <div className="hourLabels">
                     {

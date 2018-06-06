@@ -219,7 +219,8 @@ export class Timetable {
       this.clearAllEmployees = this.clearAllEmployees.bind(this);
       this.clearEmployee = this.clearEmployee.bind(this);
       this.addEmployee = this.addEmployee.bind(this);
-      
+      this.clearHiddenHours = this.clearHiddenHours.bind(this);
+      this.addBulkEmployees = this.addBulkEmployees.bind(this);
 
     }
 
@@ -268,7 +269,10 @@ export class Timetable {
     }
     
     addEmployee(employee, day, hourKey) {
-        this[day][Number(hourKey.slice(0,2))][Object.keys(this[day][Number(hourKey.slice(0,2))])[0]].push(employee);
+        const hourNum = Number(hourKey.slice(0,2))
+        if (this[day][hourNum][Object.keys(this[day][hourNum])[0]].indexOf(employee) === -1) {
+            this[day][hourNum][Object.keys(this[day][hourNum])[0]].push(employee);
+        }
     }
 
     getEmployeeHours(id) {
@@ -285,6 +289,33 @@ export class Timetable {
         })
     }
 
+    clearHiddenHours(start, end) {
+        this.days.forEach(day => {
+            console.log(day);
+            this[day].forEach(hourObj => {
+                const hourNum = Number(Object.keys(hourObj)[0].slice(0,2));
+                if ( hourNum < start || hourNum > end ) { 
+                    const hourArr = hourObj[Object.keys(hourObj)[0]];
+                    console.log(hourObj);
+                    console.log(hourArr);
+                    hourArr.splice(0, hourArr.length);
+                    console.log(hourArr);
+                }
+            })
+        })
+    }
+
+    addBulkEmployees(weekObj) {
+        for (let day in weekObj) {
+            weekObj[day].forEach(hourObj => {
+                for (let hour in hourObj) {
+                    hourObj[hour].forEach(employee => {
+                        this.addEmployee(employee, day, hour)
+                    })
+                }
+            })
+        }
+    }
 
     test() {console.log('test')}
 }

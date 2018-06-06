@@ -80,7 +80,7 @@ export class Calendar extends Component {
         const daysInWeeksArr = this.state.generateMonth(selectedDate, this.state.daysInMonth)
         return (
             <div className="calendarContainer">
-                <button onClick={this.testFunc}>TEST</button>
+                {/* <button onClick={this.testFunc}>TEST</button> */}
                 <div className="calendarNavbar">
                     <div>{this.state.monthLabels[selectedDate.getMonth()]} {selectedDate.getFullYear()}</div>
                     <div className="calendarArrows">
