@@ -1,0 +1,20 @@
+.carousel {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 10px;
+}
+
+.employeeBlock {
+    width: 50px;
+    height: 40px;
+    border: 1px solid green;
+    box-sizing: border-box
+}
+
+.employeeBlock:not(:first-child) {
+    margin-left: 5px;
+}
+
+.employeeBlock div:first-child:hover {
+    cursor: pointer;
+}

@@ -1,0 +1,39 @@
+.newEmployeeForm {
+    border: 1px solid darkcyan;
+    margin-top: 5px;
+    width: 250px;
+    box-sizing: border-box;
+    padding: 0px 10px 10px 10px;
+}
+
+.newEmployeeForm p {
+    margin: 0;
+}
+
+.newEmployeeForm .titleBar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.newEmployeeForm>form>.titleBar>p {
+    margin-top: 10px;
+}
+
+.newEmployeeForm>form {
+    display: flex;
+    flex-direction: column;
+}
+
+.closeBtn {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    padding: 0;
+}
+
+.closeBtn:hover {
+    cursor: pointer;
+    color: #7a7a7a;
+}

@@ -1,0 +1,72 @@
+.calendarNavbar {
+  width: 100%;
+  height: 35px;
+  border: 1px solid darkred;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 5px;
+  box-sizing: border-box;
+}
+
+.calendarBlock {
+  width: 100%;
+  height: 200px;
+  border: 1px solid deepskyblue;
+  box-sizing: border-box;
+  padding: 20px;
+}
+
+.calendarArrows {
+  user-select: none;
+  font-size: 1.4rem;
+}
+
+.calendarArrows:hover {
+  cursor: pointer;
+}
+
+.calendarArrows span {
+  width: 20px;
+  text-align: center;
+  border-radius: 100px;
+}
+
+.calendarArrows span:hover {
+  color: rgba(0, 183, 255, 0.39);
+}
+
+.calendarArrows span:not(:last-child) {
+  margin-right: 5px;
+}
+
+.dayLetters {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 10px;
+}
+
+.dayLetters > div {
+  width: 30px; 
+  text-align: center;
+}
+
+.weekRow {
+  display: flex;
+  flex-direction: row;
+  box-sizing: border-box;
+}
+
+.weekRow:hover {
+  background-color: darkcyan;
+  cursor: pointer;
+}
+
+.dayInRow { 
+  width: 30px;
+  text-align: center;
+}
+
+.selectedWeek {
+  background-color: goldenrod;
+}

@@ -17,7 +17,7 @@ mongoose.connect(mongoDB);
 mongoose.Promise = global.Promise;
 const db = mongoose.connection;
 
-app.use(express.static(path.join(__dirname, "build")));
+// app.use(express.static(path.join(__dirname, "build")));
 
 app.get("/api/weeks", function(req, res) {
     Week.find({})
@@ -57,8 +57,8 @@ app.post('/api/newUser', function(req, res) {
     res.send(req.body)
 })
 
-// app.get("/", function(req, res) {
-//   res.sendFile(path.join(__dirname, "build", "index.html"));
-// });
+app.get("/", function(req, res) {
+  res.sendFile(path.join(__dirname, "build", "index.html"));
+});
 
 app.listen(port);
