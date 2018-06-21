@@ -460,7 +460,7 @@ export class TimetablePage extends Component {
         {/* <button onClick={this.testFunc}>TEST</button> */}
         {true && 
         <div>
-          <Navbar/>
+          {/* <Navbar/> */}
           <div className="appContainer">
             <div className="buttonAndCarouselContainer">      
               <Carousel state={this.state} selectEmployee={this.selectEmployee}/>
@@ -630,7 +630,7 @@ export class TimetablePage extends Component {
                 </div>
               </div>)
               :
-              <div>SELECT A WEEK</div>
+              <div className="promptToSelectWeek">SELECT A WEEK</div>
               }
             </div>
             </div>

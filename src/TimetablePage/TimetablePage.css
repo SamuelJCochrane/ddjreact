@@ -23,10 +23,20 @@ body {
 
 .centreContainer {
     position: relative;
-    border: 1px solid red;
-    margin-left: 400px;
+    background-color: white;
+    margin-left: 420px;
     margin-top: 50px;
+    width: 900px;
+    min-height: 500px;
     box-sizing: border-box;
+}
+
+.promptToSelectWeek {
+    position: relative;
+    float: left;
+    /* top: 50%; */
+    left: 50%;
+    /* transform: translate(-50%, -50%); */
 }
 
 .awkwardContainer {
@@ -35,10 +45,12 @@ body {
 
 .fixedHeader {
     position: fixed;
-    top: 25px;
+    top: 50px;
     background-color: white;
     z-index: 10;
-
+    border-bottom: 1px solid grey;
+    width: 900px;
+    box-shadow: 0px 2px 1px rgba(0, 0, 0, 0.3);
 }
 
 .weekTitle {
@@ -47,7 +59,13 @@ body {
 
 .buttonAndCarouselContainer {
     position: fixed;
-    margin-top: 40px;
+    margin-top: 70px;
+    background-color: white;
+    box-sizing: border-box;
+    padding: 10px;
+    margin-left: 5px;
+    border-radius: 10px;
+    box-shadow: 2px 2px 20px 1px rgba(0, 0, 0, 0.5);
 }
 
 .selected {
@@ -64,38 +82,6 @@ body {
 
 .containsEmployee {
     background-color: rgba(0, 128, 0, 0.404);
-}
-
-.hour {
-    position: relative;
-    width: 100px;
-    height: 150px;
-    margin-bottom: 10px;
-    border: 1px solid darkorchid;
-    box-sizing: border-box;
-    padding: 10px;
-    padding-top: 25px;
-}
-
-.hour:hover {
-    background-color: goldenrod;
-}
-
-.hour>button {
-    background-color: white;
-    position: absolute;
-    top: 2px;
-    left: 26px;
-    border-radius: 10px;
-}
-
-.hour>button:hover {
-    cursor: pointer;
-}
-
-.hour li:hover {
-    background-color: #F24C4E;
-    cursor: pointer;
 }
 
 .timetableContainer {
