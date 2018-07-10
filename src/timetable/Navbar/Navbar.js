@@ -2,7 +2,9 @@ import React from 'react';
 
 export const Navbar = () => 
     <div className="navbar">
-        <span>
+        <div className="title">
             DOING DAVE'S JOB
-        </span>
+        </div>
+        <div className="nav-btns">
+        </div>
     </div>

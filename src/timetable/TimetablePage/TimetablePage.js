@@ -10,8 +10,8 @@ import { Navbar } from '../Navbar/Navbar.js';
 import { Calendar } from '../Calendar/Calendar.js';
 import { NewEmployeeForm } from '../NewEmployeeForm/NewEmployeeForm.js';
 
-import { tempTimetable } from '../tempTimetable.js';
-import { timetables2018, Timetable } from '../tempYear.js';
+import { tempTimetable } from '../../tempTimetable.js';
+import { timetables2018, Timetable } from '../../tempYear.js';
 
 export class TimetablePage extends Component {
 
@@ -34,15 +34,16 @@ export class TimetablePage extends Component {
       multiStartHour: '06:00',
       multiEndHour: '23:00',
 
-      employees: [
-        {name: 'John', totalHours: 0, hoursWanted: 1, _id: '1'},
-        {name: 'Jack', totalHours: 0, hoursWanted: 50, _id: '2'},
-        {name: 'Jacob', totalHours: 0, hoursWanted: 32, _id: '3'},
-        {name: 'Jane', totalHours: 0, hoursWanted: 45, _id: '4'},
-        {name: 'Jill', totalHours: 0, hoursWanted: 40, _id: '5'},
-        {name: 'Janus', totalHours: 0, hoursWanted: 77, _id: '6'},
-        {name: 'Jort', totalHours: 0, hoursWanted: 35, _id: '7'},
-      ],
+      // employees: [
+      //   {name: 'John', totalHours: 0, hoursWanted: 1, _id: '1'},
+      //   {name: 'Jack', totalHours: 0, hoursWanted: 50, _id: '2'},
+      //   {name: 'Jacob', totalHours: 0, hoursWanted: 32, _id: '3'},
+      //   {name: 'Jane', totalHours: 0, hoursWanted: 45, _id: '4'},
+      //   {name: 'Jill', totalHours: 0, hoursWanted: 40, _id: '5'},
+      //   {name: 'Janus', totalHours: 0, hoursWanted: 77, _id: '6'},
+      //   {name: 'Jort', totalHours: 0, hoursWanted: 35, _id: '7'},
+      // ],
+      employees: null,
       timetable: null,
       allTimetables: null,
       daysOfTheWeek: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'],
@@ -50,7 +51,7 @@ export class TimetablePage extends Component {
       dayLetters: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
       monthLabels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
       daysInMonth: [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
-    
+      
     }
 
     this.removeEmployee = this.removeEmployee.bind(this);
@@ -77,31 +78,18 @@ export class TimetablePage extends Component {
     this.setSelectedDate = this.setSelectedDate.bind(this);
     this.getEmployeeTotalHours = this.getEmployeeTotalHours.bind(this);
     this.getTimetables = this.getTimetables.bind(this);
+    this.getEmployees = this.getEmployees.bind(this);
     this.testFunc = this.testFunc.bind(this);
   }
 
   componentDidMount() {
-    // this.getTimetables();
-    this.setState({ allTimetables: timetables2018})
+    this.getTimetables();
+    this.getEmployees();
+    //this.setState({ allTimetables: timetables2018})
   }
 
-  removeEmployee(employeeToRemove, day, hourKey) {
-    // const newEmployees = this.state.timetable[day][Number(hourKey.slice(0, 2))][hourKey].filter(
-    //   employee => {
-    //     return employee._id !== employeeToRemove._id
-    //   }
-    // );
-    // const newTimetable = {...this.state.timetable};
-    // newTimetable[day][Number(hourKey.slice(0, 2))][hourKey] = newEmployees;
-    // const newEmployeesData = this.state.employees.map(employee => {
-    //   if (employee._id === employeeToRemove._id && employee.totalHours > 0) {
-    //     const newEmployee = {...employee};
-    //     newEmployee.totalHours = newEmployee.totalHours - 1
-    //     return newEmployee
-    //   }
-    //   else {return employee}
-    // })
-    // this.setState({ timetable: newTimetable, employees: newEmployeesData });
+  removeEmployee(employeeToRemove, day, hourKey, event) {
+    event.stopPropagation();
     this.state.timetable.removeEmployee(employeeToRemove, day, hourKey);
     this.setState({ timetable: this.state.timetable }, this.updateEmployeeHours)
   }
@@ -155,21 +143,6 @@ export class TimetablePage extends Component {
   }
 
   clearEmployee() {
-    // Object.keys(this.state.timetable).forEach(dayKey => {
-    //   this.state.timetable[dayKey].forEach(hourObj => {
-    //     this.removeEmployee(this.state.selectedEmployee, dayKey, Object.keys(hourObj)[0])
-    //   })
-    // })
-
-    // const newEmployeesData = this.state.employees.map(employee => {
-    //   const newEmployee = {...employee};
-    //   if ( newEmployee._id === this.state.selectedEmployee._id ) {
-    //     newEmployee.totalHours = 0;
-    //   }
-    //   return newEmployee;
-    // })
-
-    // this.setState({ employees: newEmployeesData })
     this.state.timetable.clearEmployee(this.state.selectedEmployee._id)
     this.setState({ timetable: this.state.timetable }, this.updateEmployeeHours)
   }
@@ -188,6 +161,16 @@ export class TimetablePage extends Component {
 
   submitNewEmployee(event) {
     event.preventDefault();
+    axios({
+      method: 'post',
+      url: '/api/employees',
+      data: {
+        name: this.state.newEmployeeName,
+        hoursWanted: this.state.newEmployeeHours
+      }
+    })
+    .then(res => {console.log(res)})
+    .catch(err => {console.log(err)})
   }
 
   onStartHourChange(event) {
@@ -227,57 +210,6 @@ export class TimetablePage extends Component {
   }
 
   clearHiddenHours() {
-    // const newTimetable = {'monday': [], 'tuesday': [], 'wednesday': [], 'thursday': [], 'friday': [], 'saturday': [], 'sunday': [], }
-    // this.state.daysOfTheWeek
-    //   .forEach(day => 
-    //     newTimetable[day] =
-    //     this.state.timetable[day]
-    //       .map(hourObj => {
-    //         const hourKey = Object.keys(hourObj)[0];
-    //         if (hourKey.slice(0,2) < this.state.startHour.slice(0,2) || hourKey.slice(0,2) > this.state.endHour.slice(0,2)) {
-    //           const tempObj = {}
-    //           tempObj[hourKey] = []
-    //           return tempObj
-    //         } 
-    //         else {
-    //           return hourObj
-    //         }
-    //       }
-    //       )
-    //   )
-
-    // let employeesToDecreaseIDs = {}
-    // for (let day in this.state.timetable) {
-    //   this.state.timetable[day].forEach(hour => {
-    //     if (
-    //       hour[Object.keys(hour)[0]].length > 0 &&
-    //       (Object.keys(hour)[0].slice(0,2) < this.state.startHour.slice(0,2) ||
-    //       Object.keys(hour)[0].slice(0,2) > this.state.endHour.slice(0,2))
-    //     ) 
-    //     {
-    //       hour[Object.keys(hour)[0]].forEach(employee => {
-    //         if (employeesToDecreaseIDs[employee._id]) {
-    //           ++employeesToDecreaseIDs[employee._id];
-    //         }
-    //         else {
-    //           employeesToDecreaseIDs[employee._id] = 1;
-    //         }
-    //       }) 
-    //     }
-    //   }
-    //   )
-    // }
-
-    // const newEmployees = this.state.employees.map(employee => {
-    //   for (let employeeToDecreaseID in employeesToDecreaseIDs) {
-    //     if (employeeToDecreaseID === employee._id) {
-    //       const newEmployee = {...employee};
-    //       newEmployee.totalHours -= employeesToDecreaseIDs[employee._id];
-    //       return newEmployee;
-    //     }
-    //   }
-    //   return employee;
-    // })
     this.state.timetable.clearHiddenHours(Number(this.state.startHour.slice(0,2)), Number(this.state.endHour.slice(0,2)))
     this.setState({ timetable: this.state.timetable }, this.updateEmployeeHours)
   }
@@ -401,6 +333,10 @@ export class TimetablePage extends Component {
     }
   }
 
+  updateTimetable() {
+    
+  }
+
   getTimetables() {
     let allTimetables;
     axios({
@@ -412,7 +348,7 @@ export class TimetablePage extends Component {
     })
     .then(res => {
       allTimetables = res.data;
-      console.log(allTimetables)
+      // console.log(allTimetables)
       this.constructAllTimetables(allTimetables);
     })
   }
@@ -426,30 +362,28 @@ export class TimetablePage extends Component {
         weekObj[day] = [...table[day]]
       })
       newTimetable.addBulkEmployees(weekObj);
-      timetables2018[table.weekID] = weekObj;
+      timetables2018[table.weekID] = newTimetable;
     })
-    console.log(timetables2018)
     this.setState({ allTimetables: timetables2018})
   }
 
+  getEmployees() {
+    let employees;
+    axios({
+      method: 'get',
+      url: '/api/employees'
+    })
+    .catch(err => {
+      console.log(err)
+    })
+    .then(res => {
+      console.log(res.data)
+      this.setState({employees: res.data})
+    })
+  }
+
   testFunc() {
-    // axios({
-    //   method: 'post',
-    //   url: '/api/newUser',
-    //   data: {
-    //     email: 'test4',
-    //     username: 'test4',
-    //     password: 'test4',
-    //     passwordConf: 'test4'
-    //   }
-    // })
-    // .then(response => {
-    //   console.log(response)
-    // })
-    // .catch(error => {
-    //   console.log(error)
-    // })
-    console.log(this.state.tempEndHour);
+    console.log('test')
   }
 
   render() {
@@ -457,13 +391,15 @@ export class TimetablePage extends Component {
     
     return (
       <div className="App">
-        {/* <button onClick={this.testFunc}>TEST</button> */}
         {true && 
         <div>
           {/* <Navbar/> */}
           <div className="appContainer">
             <div className="buttonAndCarouselContainer">      
+              {/* <button onClick={this.testFunc}>TEST</button> */}
+              { this.state.employees &&
               <Carousel state={this.state} selectEmployee={this.selectEmployee}/>
+              }
               <div className="multiChanges">
                 Day:
                 <select value={this.state.selectedDay} onChange={this.onDayChange}>
@@ -630,7 +566,7 @@ export class TimetablePage extends Component {
                 </div>
               </div>)
               :
-              <div className="promptToSelectWeek">SELECT A WEEK</div>
+              <div className="promptToSelectWeek"> <FontAwesome name="arrow-left"/> SELECT A WEEK</div>
               }
             </div>
             </div>

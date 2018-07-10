@@ -9,6 +9,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 const User = require('./server/models/user');
 const Week = require('./server/models/week');
+const Employee = require('./server/models/employee');
 
 const port = process.env.PORT || 5000;
 
@@ -30,6 +31,24 @@ app.get("/api/weeks", function(req, res) {
             }
         })
 });
+
+app.get("/api/employees", function(req, res) {
+    Employee.find({})
+        .exec((err, results) => {
+            if (err) {
+                res.send(err)
+            }
+            else {
+                res.send(results)
+            }
+        })
+})
+
+app.post("/api/employees", function(req, res) {
+    const newEmployee = new Employee({name: req.body.name, hoursWanted: req.body.hoursWanted});
+    newEmployee.save(err => {console.log(err)})
+    res.send('POST')
+})
 
 app.post('/api/newUser', function(req, res) {
     if (req.body.email &&

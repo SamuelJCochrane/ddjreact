@@ -4,8 +4,8 @@ import axios from 'axios';
 import './App.css';
 
 //COMPONENTS
-import { TimetablePage } from './TimetablePage/TimetablePage';
-import { Navbar } from './Navbar/Navbar';
+import { TimetablePage } from './timetable/TimetablePage/TimetablePage';
+import { Navbar } from './timetable/Navbar/Navbar';
 
 class App extends Component {
 

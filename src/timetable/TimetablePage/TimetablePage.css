@@ -29,14 +29,19 @@ body {
     width: 900px;
     min-height: 500px;
     box-sizing: border-box;
+    border-radius: 0 0 1rem 1rem;
+    padding-bottom: 1rem;
+    box-shadow: 0 .2rem .1rem rgba(0, 0, 0, 0.3);
 }
 
 .promptToSelectWeek {
     position: relative;
-    float: left;
-    /* top: 50%; */
-    left: 50%;
-    /* transform: translate(-50%, -50%); */
+    font-size: 2rem;
+    width: 100%;
+    height: 25rem;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 25rem;
 }
 
 .awkwardContainer {
@@ -54,7 +59,21 @@ body {
 }
 
 .weekTitle {
-    margin-left: 300px;
+    margin-left: 350px;
+    margin-top: .5rem;
+    margin-bottom: .5rem;
+}
+
+.weekTitle > h2 {
+    padding: 0;
+    margin: 0;
+}
+
+.dayLabels {
+    margin-left: 110px;
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 1rem;
 }
 
 .buttonAndCarouselContainer {
@@ -80,10 +99,6 @@ body {
     margin-right: 10px;
 }
 
-.containsEmployee {
-    background-color: rgba(0, 128, 0, 0.404);
-}
-
 .timetableContainer {
     display: flex;
     flex-direction: row;
@@ -91,11 +106,6 @@ body {
     margin-top: 100px;
 }
 
-.dayLabels {
-    margin-left: 110px;
-    display: flex;
-    flex-direction: row;
-}
 
 .dayLabels>div {
     width: 100px;

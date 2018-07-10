@@ -1,10 +1,10 @@
 @import './App.css';
-@import './Calendar/Calendar.css';
-@import './Carousel/Carousel.css';
-@import './Hour/Hour.css';
-@import './Navbar/Navbar.css';
-@import './NewEmployeeForm/NewEmployeeForm.css';
-@import './TimetablePage/TimetablePage.css';
+@import './timetable/Calendar/Calendar.css';
+@import './timetable/Carousel/Carousel.css';
+@import './timetable/Hour/Hour.css';
+@import './timetable/Navbar/Navbar.css';
+@import './timetable/NewEmployeeForm/NewEmployeeForm.css';
+@import './timetable/TimetablePage/TimetablePage.css';
 
 html {
     font-family: 'Roboto', sans-serif;
@@ -14,4 +14,5 @@ html {
 body {
     min-height: 100%;
     background: linear-gradient(to top, #2A71B1, #0E3775);
+    padding-bottom: 1rem;
 }

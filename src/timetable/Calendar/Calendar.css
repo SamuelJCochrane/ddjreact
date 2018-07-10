@@ -60,6 +60,7 @@
 .weekRow:hover {
   background-color: darkcyan;
   cursor: pointer;
+  border-radius: 1rem;
 }
 
 .dayInRow { 
@@ -69,4 +70,5 @@
 
 .selectedWeek {
   background-color: goldenrod;
+  border-radius: 1rem;
 }

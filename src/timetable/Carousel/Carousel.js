@@ -9,7 +9,7 @@ export const Carousel = ({state, selectEmployee}) =>
                 onClick={() => selectEmployee(employee)}>
                 {employee.name}</div>
                 <div className={employee.totalHours>employee.hoursWanted ? 'tooManyHours': ''}>
-                    {employee.totalHours}/{employee.hoursWanted}
+                    {employee.totalHours || 0}/{employee.hoursWanted}
                 </div>
             </div>
         )}
